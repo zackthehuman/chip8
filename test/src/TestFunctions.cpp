@@ -144,4 +144,24 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.programCounter == pc );
   }
+
+  SECTION( "ops::skipIfVxEqualsVy increments the program counter by 1 if VX == VY" ) {
+    vm.registers[0x3] = 0x42;
+    vm.registers[0xD] = 0x42;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfVxEqualsVy(vm, 0x43D0);
+
+    REQUIRE( vm.programCounter == (pc + 1) );
+  }
+
+  SECTION( "ops::skipIfVxEqualsVy does not increment the program counter by 1 if VX != VY" ) {
+    vm.registers[0x3] = 0x42;
+    vm.registers[0xD] = 0x31;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfVxEqualsVy(vm, 0x43D0);
+
+    REQUIRE( vm.programCounter == pc );
+  }
 }

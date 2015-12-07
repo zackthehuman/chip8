@@ -43,6 +43,10 @@ namespace chip8 {
         ops::skipIfNotEquals(vm, instruction);
         break;
 
+      case 0x5000:
+        ops::skipIfVxEqualsVy(vm, instruction);
+        break;
+
       default:
       break;
     }

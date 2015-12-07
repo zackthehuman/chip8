@@ -59,5 +59,18 @@ namespace chip8 {
       }
     }
 
+    void skipIfVxEqualsVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      if(registerX == registerY) {
+        vm.programCounter += 1;
+      }
+    }
+
   }
 }
