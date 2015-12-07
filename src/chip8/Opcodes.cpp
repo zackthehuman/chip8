@@ -120,7 +120,14 @@ namespace chip8 {
           xorVxVy(vm, instruction);
           break;
 
+        case 0x4:
+        case 0x5:
+        case 0x6:
+        case 0x7:
+        case 0xE:
+
         default:
+
           break;
       }
     }
@@ -179,6 +186,12 @@ namespace chip8 {
       if(registerX != registerY) {
         vm.programCounter += 2;
       }
+    }
+
+    void setIToAddress(VirtualMachine & vm, Instruction instruction) {
+      Address address = getAddress(instruction);
+
+      vm.I = address;
     }
   }
 }

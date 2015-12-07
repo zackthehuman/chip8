@@ -200,4 +200,10 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.programCounter == pc );
   }
+
+  SECTION( "ops::setIToAddress sets I to the specified address" ) {
+    chip8::ops::setIToAddress(vm, 0xA123);
+
+    REQUIRE( vm.I == 0x123 );
+  }
 }

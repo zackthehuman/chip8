@@ -8,7 +8,7 @@ namespace chip8 {
     ByteArray<RAM_SIZE> memory;
     ByteArray<REGISTER_COUNT> registers;
     Address programCounter;
-    Byte I; // address register
+    Address I; // address register
     Timers timers;
     Stack stack;
 

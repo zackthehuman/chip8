@@ -81,6 +81,10 @@ namespace chip8 {
         ops::skipIfVxNotEqualsVy(vm, instruction);
         break;
 
+      case 0xA000:
+        ops::setIToAddress(vm, instruction);
+        break;
+
       default:
       break;
     }
