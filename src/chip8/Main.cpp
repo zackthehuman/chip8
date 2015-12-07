@@ -6,7 +6,7 @@
 int main(int argc, char** argv) {
   using namespace chip8;
 
-  VirtualMachine cpu;
+  VirtualMachine vm;
 
   return 0;
 }
