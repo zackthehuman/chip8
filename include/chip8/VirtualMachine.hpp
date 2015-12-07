@@ -7,6 +7,7 @@ namespace chip8 {
   struct VirtualMachine {
     ByteArray<RAM_SIZE> memory;
     ByteArray<REGISTER_COUNT> registers;
+    Address programCounter;
     Byte I; // address register
     Timers timers;
     Stack stack;
@@ -14,6 +15,7 @@ namespace chip8 {
     VirtualMachine()
       : memory{}
       , registers{}
+      , programCounter{0}
       , I{0}
       , timers{}
       , stack{}

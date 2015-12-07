@@ -9,12 +9,13 @@ set( INCLUDE_DIRS
 )
 
 set( REQUIRE_EMULATOR_SOURCE_FILES
-
+    ${EMULATOR_BASE_DIR}/src/chip8/Functions.cpp
 )
 
 set( TEST_SOURCE_FILES
     ${REQUIRE_EMULATOR_SOURCE_FILES}
     src/Main.cpp
+    src/TestFunctions.cpp
 )
 
 include_directories( ${INCLUDE_DIRS} )
