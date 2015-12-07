@@ -14,12 +14,14 @@ namespace chip8 {
     ops::skipIfNotEquals,
     ops::skipIfVxEqualsVy,
     ops::setVx,
-    ops::addToVx
+    ops::addToVx,
+    ops::disambiguate0x8
   } };
 
   Instruction fetch(VirtualMachine & vm) {
-    auto instruction = vm.memory[vm.programCounter++];
-    return instruction;
+    Instruction highByte = static_cast<Instruction>(vm.memory[vm.programCounter++]) << 8;
+    Instruction lowByte = static_cast<Instruction>(vm.memory[vm.programCounter++]);
+    return highByte + lowByte;
   }
 
   void execute(VirtualMachine & vm, Instruction instruction) {
@@ -70,8 +72,24 @@ namespace chip8 {
         ops::addToVx(vm, instruction);
         break;
 
+      case 0x8000:
+        ops::disambiguate0x8(vm, instruction);
+        break;
+
       default:
       break;
     }
+  }
+
+  void cycle(VirtualMachine & vm) {
+    if(vm.timers.delay > 0) {
+      vm.timers.delay -= 1;
+    }
+
+    if(vm.timers.sound > 0) {
+      vm.timers.sound -= 1;
+    }
+
+    execute(vm, fetch(vm));
   }
 }

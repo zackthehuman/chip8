@@ -8,6 +8,11 @@ namespace chip8 {
 
   Instruction fetch(VirtualMachine & vm);
   void execute(VirtualMachine & vm, Instruction instruction);
+  void cycle(VirtualMachine & vm);
+
+  inline bool matchesMask(const Instruction ins, const Instruction mask) {
+    return (ins & mask) == mask;
+  }
 
   inline Byte getHighByte(Instruction ins) noexcept {
     return static_cast<Byte>((ins & HIGH_BYTE_MASK) >> HIGH_BYTE_SHIFT);

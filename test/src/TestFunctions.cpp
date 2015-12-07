@@ -60,13 +60,47 @@ TEST_CASE( "Basic VM functions", "fetch return value and side effects" ) {
   REQUIRE( vm.timers.delay == 0 );
   REQUIRE( vm.stack.size() == 0 );
 
-  SECTION( "fetch should return the value at the current program counter, increasing the program counter by 1" ) {
-    vm.memory[0] = 0xAB;
+  SECTION( "fetch should return the value at the current program counter, increasing the program counter by 2" ) {
+    vm.memory[0] = 0xA0;
+    vm.memory[1] = 0xB0;
 
     auto pc = vm.programCounter;
     auto result = chip8::fetch(vm);
 
-    REQUIRE( result == 0xAB );
-    REQUIRE( vm.programCounter == (pc + 1) );
+    REQUIRE( result == 0xA0B0 );
+    REQUIRE( vm.programCounter == (pc + 2) );
+  }
+
+  SECTION( "cycle should decrement the delay and sound counters by 1 if they're non-zero" ) {
+    vm.memory[0] = 0x80; // set register 0 to itself
+    vm.memory[1] = 0x00;
+    vm.memory[2] = 0x10; // jump back to the beginning
+    vm.memory[3] = 0x00;
+
+    vm.timers.delay = 10;
+    vm.timers.sound = 15;
+
+    auto pc = vm.programCounter;
+
+    chip8::cycle(vm);
+
+    REQUIRE( vm.programCounter == (pc + 2) );
+    REQUIRE( vm.timers.delay == 9 );
+    REQUIRE( vm.timers.sound == 14 );
+  }
+
+  SECTION( "cycle should not decrement the delay and sound counters by 1 if they're equal to zero" ) {
+    vm.memory[0] = 0x80; // set register 0 to itself
+    vm.memory[1] = 0x00;
+    vm.memory[2] = 0x10; // jump back to the beginning
+    vm.memory[3] = 0x00;
+
+    vm.timers.delay = 0;
+    vm.timers.sound = 0;
+
+    chip8::cycle(vm);
+
+    REQUIRE( vm.timers.delay == 0 );
+    REQUIRE( vm.timers.sound == 0 );
   }
 }

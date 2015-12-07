@@ -108,4 +108,76 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.registers[0xA] == (0x11 + 0x22) );
   }
+
+  SECTION( "ops::setVxToVy sets VX to the value of register VY" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x22;
+
+    chip8::ops::setVxToVy(vm, 0x8010);
+
+    REQUIRE( vm.registers[0x0] == 0x22 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::setVxToVy when given 0x8000" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x22;
+
+    chip8::ops::disambiguate0x8(vm, 0x8010);
+
+    REQUIRE( vm.registers[0x0] == 0x22 );
+  }
+
+  SECTION( "ops::orVxVy sets VX to the value VX | VY" ) {
+    vm.registers[0x0] = 0x10;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::orVxVy(vm, 0x8011);
+
+    REQUIRE( vm.registers[0x0] == (0x10 | 0x02) );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::orVxVy when given 0x8001" ) {
+    vm.registers[0x0] = 0x10;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::disambiguate0x8(vm, 0x8011);
+
+    REQUIRE( vm.registers[0x0] == (0x10 | 0x02) );
+  }
+
+  SECTION( "ops::andVxVy sets VX to the value VX & VY" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::andVxVy(vm, 0x8012);
+
+    REQUIRE( vm.registers[0x0] == (0x11 & 0x02) );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::andVxVy when given 0x8002" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::disambiguate0x8(vm, 0x8012);
+
+    REQUIRE( vm.registers[0x0] == (0x11 & 0x02) );
+  }
+
+  SECTION( "ops::xorVxVy sets VX to the value VX ^ VY" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::xorVxVy(vm, 0x8012);
+
+    REQUIRE( vm.registers[0x0] == (0x11 ^ 0x02) );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::xorVxVy when given 0x8003" ) {
+    vm.registers[0x0] = 0x11;
+    vm.registers[0x1] = 0x02;
+
+    chip8::ops::disambiguate0x8(vm, 0x8013);
+
+    REQUIRE( vm.registers[0x0] == (0x11 ^ 0x02) );
+  }
 }

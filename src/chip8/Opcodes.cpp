@@ -99,5 +99,73 @@ namespace chip8 {
 
       vm.registers[x] += nn;
     }
+
+    void disambiguate0x8(VirtualMachine & vm, Instruction instruction) {
+      const Instruction LAST_NIBBLE_MASK = 0x000F;
+
+      switch(instruction & LAST_NIBBLE_MASK) {
+        case 0x0:
+          setVxToVy(vm, instruction);
+          break;
+
+        case 0x1:
+          orVxVy(vm, instruction);
+          break;
+
+        case 0x2:
+          andVxVy(vm, instruction);
+          break;
+
+        case 0x3:
+          xorVxVy(vm, instruction);
+          break;
+
+        default:
+          break;
+      }
+    }
+
+    void setVxToVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerY = vm.registers[y];
+
+      vm.registers[x] = registerY;
+    }
+
+    void orVxVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      vm.registers[x] = registerX | registerY;
+    }
+
+    void andVxVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      vm.registers[x] = registerX & registerY;
+    }
+
+    void xorVxVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      vm.registers[x] = registerX ^ registerY;
+    }
   }
 }
