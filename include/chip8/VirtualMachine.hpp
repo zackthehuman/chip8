@@ -11,6 +11,7 @@ namespace chip8 {
     Address I; // address register
     Timers timers;
     Stack stack;
+    RandomNumberGenerator rng;
 
     VirtualMachine()
       : memory{}
@@ -19,6 +20,7 @@ namespace chip8 {
       , I{0}
       , timers{}
       , stack{}
+      , rng{[](Byte seed) { return 7; }}
     {
       memory.fill(0);
       registers.fill(0);

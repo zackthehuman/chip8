@@ -199,5 +199,16 @@ namespace chip8 {
 
       vm.programCounter = getAddress(instruction) + offset;
     }
+
+    void randomVxModNn(VirtualMachine & vm, Instruction instruction) {
+      Nibble x;
+      Byte nn;
+
+      std::tie(x, nn) = getXNN(instruction);
+
+      const auto random = vm.rng(0);
+
+      vm.registers[x] = random & nn;
+    }
   }
 }

@@ -24,5 +24,6 @@ namespace chip8 {
     void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction);
     void setIToAddress(VirtualMachine & vm, Instruction instruction);
     void jumpPlusV0(VirtualMachine & vm, Instruction instruction);
+    void randomVxModNn(VirtualMachine & vm, Instruction instruction);
   }
 }

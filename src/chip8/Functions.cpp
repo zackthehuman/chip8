@@ -89,6 +89,10 @@ namespace chip8 {
         ops::jumpPlusV0(vm, instruction);
         break;
 
+      case 0xC000:
+        ops::randomVxModNn(vm, instruction);
+        break;
+
       default:
       break;
     }

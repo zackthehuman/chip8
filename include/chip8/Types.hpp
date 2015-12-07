@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <functional>
 #include <stack>
 
 namespace chip8 {
@@ -13,4 +14,6 @@ namespace chip8 {
 
   template <std::size_t N>
   using ByteArray = std::array<Byte, N>;
+
+  using RandomNumberGenerator = std::function<Byte(Byte seed)>;
 }

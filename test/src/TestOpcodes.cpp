@@ -214,4 +214,12 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.programCounter == (0x123 + 0x42) );
   }
+
+  SECTION( "ops::randomVxModNn sets VX to a random value anded by NN" ) {
+    vm.rng = [](chip8::Byte seed) { return 0x42; };
+
+    chip8::ops::randomVxModNn(vm, 0xC013);
+
+    REQUIRE( vm.registers[0] == (0x13 & 0x42) );
+  }
 }
