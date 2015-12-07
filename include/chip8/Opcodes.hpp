@@ -21,5 +21,6 @@ namespace chip8 {
     void orVxVy(VirtualMachine & vm, Instruction instruction);
     void andVxVy(VirtualMachine & vm, Instruction instruction);
     void xorVxVy(VirtualMachine & vm, Instruction instruction);
+    void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction);
   }
 }

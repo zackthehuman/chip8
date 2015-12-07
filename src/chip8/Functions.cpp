@@ -15,7 +15,8 @@ namespace chip8 {
     ops::skipIfVxEqualsVy,
     ops::setVx,
     ops::addToVx,
-    ops::disambiguate0x8
+    ops::disambiguate0x8,
+    ops::skipIfVxNotEqualsVy
   } };
 
   Instruction fetch(VirtualMachine & vm) {
@@ -74,6 +75,10 @@ namespace chip8 {
 
       case 0x8000:
         ops::disambiguate0x8(vm, instruction);
+        break;
+
+      case 0x9000:
+        ops::skipIfVxNotEqualsVy(vm, instruction);
         break;
 
       default:

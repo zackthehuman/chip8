@@ -39,7 +39,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.stack.size() == 0 );
   }
 
-  SECTION( "ops::skipIfEquals increments the program counter by 1 if VX == NN" ) {
+  SECTION( "ops::skipIfEquals increments the program counter by 2 if VX == NN" ) {
     vm.registers[0xD] = 0x42;
     auto pc = vm.programCounter;
 
@@ -48,7 +48,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == (pc + 2) );
   }
 
-  SECTION( "ops::skipIfEquals does not increment the program counter by 1 if VX != NN" ) {
+  SECTION( "ops::skipIfEquals does not increment the program counter by 2 if VX != NN" ) {
     vm.registers[0xD] = 0x99;
     auto pc = vm.programCounter;
 
@@ -57,7 +57,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == pc );
   }
 
-  SECTION( "ops::skipIfNotEquals increments the program counter by 1 if VX != NN" ) {
+  SECTION( "ops::skipIfNotEquals increments the program counter by 2 if VX != NN" ) {
     vm.registers[0xD] = 0x42;
     auto pc = vm.programCounter;
 
@@ -66,7 +66,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == (pc + 2) );
   }
 
-  SECTION( "ops::skipIfNotEquals does not increment the program counter by 1 if VX == NN" ) {
+  SECTION( "ops::skipIfNotEquals does not increment the program counter by 2 if VX == NN" ) {
     vm.registers[0xD] = 0x42;
     auto pc = vm.programCounter;
 
@@ -75,7 +75,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == pc );
   }
 
-  SECTION( "ops::skipIfVxEqualsVy increments the program counter by 1 if VX == VY" ) {
+  SECTION( "ops::skipIfVxEqualsVy increments the program counter by 2 if VX == VY" ) {
     vm.registers[0x3] = 0x42;
     vm.registers[0xD] = 0x42;
     auto pc = vm.programCounter;
@@ -85,7 +85,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == (pc + 2) );
   }
 
-  SECTION( "ops::skipIfVxEqualsVy does not increment the program counter by 1 if VX != VY" ) {
+  SECTION( "ops::skipIfVxEqualsVy does not increment the program counter by 2 if VX != VY" ) {
     vm.registers[0x3] = 0x42;
     vm.registers[0xD] = 0x31;
     auto pc = vm.programCounter;
@@ -179,5 +179,25 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     chip8::ops::disambiguate0x8(vm, 0x8013);
 
     REQUIRE( vm.registers[0x0] == (0x11 ^ 0x02) );
+  }
+
+  SECTION( "ops::skipIfVxNotEqualsVy increments the program counter by 2 if VX != VY" ) {
+    vm.registers[0x3] = 0x42;
+    vm.registers[0xD] = 0x24;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfVxNotEqualsVy(vm, 0x93D0);
+
+    REQUIRE( vm.programCounter == (pc + 2) );
+  }
+
+  SECTION( "ops::skipIfVxNotEqualsVy does not increment the program counter by 2 if VX == VY" ) {
+    vm.registers[0x3] = 0x42;
+    vm.registers[0xD] = 0x42;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfVxNotEqualsVy(vm, 0x93D0);
+
+    REQUIRE( vm.programCounter == pc );
   }
 }
