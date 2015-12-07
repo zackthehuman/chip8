@@ -35,6 +35,14 @@ namespace chip8 {
         ops::callSubroutine(vm, instruction);
         break;
 
+      case 0x3000:
+        ops::skipIfEquals(vm, instruction);
+        break;
+
+      case 0x4000:
+        ops::skipIfNotEquals(vm, instruction);
+        break;
+
       default:
       break;
     }

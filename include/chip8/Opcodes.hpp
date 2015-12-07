@@ -10,5 +10,7 @@ namespace chip8 {
     void returnFromSubroutine(VirtualMachine & vm, Instruction instruction);
     void callProgramAtAddress(VirtualMachine & vm, Instruction instruction);
     void callSubroutine(VirtualMachine & vm, Instruction instruction);
+    void skipIfEquals(VirtualMachine & vm, Instruction instruction);
+    void skipIfNotEquals(VirtualMachine & vm, Instruction instruction);
   }
 }

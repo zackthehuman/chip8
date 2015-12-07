@@ -2,6 +2,7 @@
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include <exception>
+#include <iostream>
 
 namespace chip8 {
   namespace ops {
@@ -30,6 +31,32 @@ namespace chip8 {
     void callSubroutine(VirtualMachine & vm, Instruction instruction) {
       vm.stack.push(vm.programCounter);
       vm.programCounter = getAddress(instruction);
+    }
+
+    void skipIfEquals(VirtualMachine & vm, Instruction instruction) {
+      Nibble x;
+      Byte nn;
+
+      std::tie(x, nn) = getXNN(instruction);
+
+      auto value = vm.registers[x];
+
+      if(value == nn) {
+        vm.programCounter += 1;
+      }
+    }
+
+    void skipIfNotEquals(VirtualMachine & vm, Instruction instruction) {
+      Nibble x;
+      Byte nn;
+
+      std::tie(x, nn) = getXNN(instruction);
+
+      auto value = vm.registers[x];
+
+      if(value != nn) {
+        vm.programCounter += 1;
+      }
     }
 
   }

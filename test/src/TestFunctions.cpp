@@ -108,4 +108,40 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == 0x0867 );
     REQUIRE( vm.stack.size() == 0 );
   }
+
+  SECTION( "ops::skipIfEquals increments the program counter by 1 if VX == NN" ) {
+    vm.registers[0xD] = 0x42;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfEquals(vm, 0x3D42);
+
+    REQUIRE( vm.programCounter == (pc + 1) );
+  }
+
+  SECTION( "ops::skipIfEquals does not increment the program counter by 1 if VX != NN" ) {
+    vm.registers[0xD] = 0x99;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfEquals(vm, 0x3D42);
+
+    REQUIRE( vm.programCounter == pc );
+  }
+
+  SECTION( "ops::skipIfNotEquals increments the program counter by 1 if VX != NN" ) {
+    vm.registers[0xD] = 0x42;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfNotEquals(vm, 0x4D99);
+
+    REQUIRE( vm.programCounter == (pc + 1) );
+  }
+
+  SECTION( "ops::skipIfNotEquals does not increment the program counter by 1 if VX == NN" ) {
+    vm.registers[0xD] = 0x42;
+    auto pc = vm.programCounter;
+
+    chip8::ops::skipIfNotEquals(vm, 0x4D42);
+
+    REQUIRE( vm.programCounter == pc );
+  }
 }
