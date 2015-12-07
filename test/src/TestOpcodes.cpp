@@ -80,7 +80,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     vm.registers[0xD] = 0x42;
     auto pc = vm.programCounter;
 
-    chip8::ops::skipIfVxEqualsVy(vm, 0x43D0);
+    chip8::ops::skipIfVxEqualsVy(vm, 0x53D0);
 
     REQUIRE( vm.programCounter == (pc + 1) );
   }
@@ -90,8 +90,22 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     vm.registers[0xD] = 0x31;
     auto pc = vm.programCounter;
 
-    chip8::ops::skipIfVxEqualsVy(vm, 0x43D0);
+    chip8::ops::skipIfVxEqualsVy(vm, 0x53D0);
 
     REQUIRE( vm.programCounter == pc );
+  }
+
+  SECTION( "ops::setVx sets the register at VX to NN" ) {
+    chip8::ops::setVx(vm, 0x63D0);
+
+    REQUIRE( vm.registers[0x3] == 0xD0 );
+  }
+
+  SECTION( "ops::addToVx adds NN to the register at VX" ) {
+    vm.registers[0xA] = 0x11;
+
+    chip8::ops::addToVx(vm, 0x7A22);
+
+    REQUIRE( vm.registers[0xA] == (0x11 + 0x22) );
   }
 }

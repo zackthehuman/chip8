@@ -12,7 +12,9 @@ namespace chip8 {
     ops::callSubroutine,
     ops::skipIfEquals,
     ops::skipIfNotEquals,
-    ops::skipIfVxEqualsVy
+    ops::skipIfVxEqualsVy,
+    ops::setVx,
+    ops::addToVx
   } };
 
   Instruction fetch(VirtualMachine & vm) {
@@ -23,6 +25,8 @@ namespace chip8 {
   void execute(VirtualMachine & vm, Instruction instruction) {
     // no-op
     const Instruction OP_MASK = 0xF000;
+
+    // FUNCTION_TABLE[instruction & OP_MASK](vm, instruction);
 
     switch(instruction & OP_MASK) {
       case 0x0:
@@ -56,6 +60,14 @@ namespace chip8 {
 
       case 0x5000:
         ops::skipIfVxEqualsVy(vm, instruction);
+        break;
+
+      case 0x6000:
+        ops::setVx(vm, instruction);
+        break;
+
+      case 0x7000:
+        ops::addToVx(vm, instruction);
         break;
 
       default:

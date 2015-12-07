@@ -82,5 +82,22 @@ namespace chip8 {
       }
     }
 
+    void setVx(VirtualMachine & vm, Instruction instruction) {
+      Nibble x;
+      Byte nn;
+
+      std::tie(x, nn) = getXNN(instruction);
+
+      vm.registers[x] = nn;
+    }
+
+    void addToVx(VirtualMachine & vm, Instruction instruction) {
+      Nibble x;
+      Byte nn;
+
+      std::tie(x, nn) = getXNN(instruction);
+
+      vm.registers[x] += nn;
+    }
   }
 }

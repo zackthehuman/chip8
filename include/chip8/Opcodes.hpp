@@ -14,5 +14,7 @@ namespace chip8 {
     void skipIfEquals(VirtualMachine & vm, Instruction instruction);
     void skipIfNotEquals(VirtualMachine & vm, Instruction instruction);
     void skipIfVxEqualsVy(VirtualMachine & vm, Instruction instruction);
+    void setVx(VirtualMachine & vm, Instruction instruction);
+    void addToVx(VirtualMachine & vm, Instruction instruction);
   }
 }
