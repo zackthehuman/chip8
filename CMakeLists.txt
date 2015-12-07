@@ -47,6 +47,7 @@ set( CMAKE_INCLUDE_CURRENT_DIR ON )
 set( EMULATOR_SOURCE_FILES
   src/chip8/Main.cpp
   src/chip8/Functions.cpp
+  src/chip8/Opcodes.cpp
 )
 
 set( INCLUDE_DIRS
