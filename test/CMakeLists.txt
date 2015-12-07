@@ -17,6 +17,7 @@ set( TEST_SOURCE_FILES
     ${REQUIRE_EMULATOR_SOURCE_FILES}
     src/Main.cpp
     src/TestFunctions.cpp
+    src/TestOpcodes.cpp
 )
 
 include_directories( ${INCLUDE_DIRS} )
