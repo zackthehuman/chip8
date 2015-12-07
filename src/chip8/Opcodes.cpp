@@ -193,5 +193,11 @@ namespace chip8 {
 
       vm.I = address;
     }
+
+    void jumpPlusV0(VirtualMachine & vm, Instruction instruction) {
+      auto offset = vm.registers[0];
+
+      vm.programCounter = getAddress(instruction) + offset;
+    }
   }
 }

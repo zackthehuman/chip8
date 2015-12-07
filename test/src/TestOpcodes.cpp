@@ -206,4 +206,12 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.I == 0x123 );
   }
+
+  SECTION( "ops::jumpPlusV0 changes the program counter to NNN + V0" ) {
+    vm.registers[0] = 0x42;
+
+    chip8::ops::jumpPlusV0(vm, 0xB123);
+
+    REQUIRE( vm.programCounter == (0x123 + 0x42) );
+  }
 }

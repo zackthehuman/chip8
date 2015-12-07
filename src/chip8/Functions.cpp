@@ -85,6 +85,10 @@ namespace chip8 {
         ops::setIToAddress(vm, instruction);
         break;
 
+      case 0xB000:
+        ops::jumpPlusV0(vm, instruction);
+        break;
+
       default:
       break;
     }
