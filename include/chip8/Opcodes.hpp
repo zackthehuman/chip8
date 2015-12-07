@@ -6,5 +6,9 @@ namespace chip8 {
 
   namespace ops {
     void jump(VirtualMachine & vm, Instruction instruction);
+    void clearScreen(VirtualMachine & vm, Instruction instruction);
+    void returnFromSubroutine(VirtualMachine & vm, Instruction instruction);
+    void callProgramAtAddress(VirtualMachine & vm, Instruction instruction);
+    void callSubroutine(VirtualMachine & vm, Instruction instruction);
   }
 }

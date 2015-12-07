@@ -15,11 +15,25 @@ namespace chip8 {
 
     switch(instruction & OP_MASK) {
       case 0x0:
-      break;
+        if(0x00E0 == instruction) {
+          ops::clearScreen(vm, instruction);
+          break;
+        } else if(0x00EE == instruction) {
+          ops::returnFromSubroutine(vm, instruction);
+          break;
+        } else {
+          ops::callProgramAtAddress(vm, instruction);
+          break;
+        }
+        break;
 
       case 0x1000:
         ops::jump(vm, instruction);
-      break;
+        break;
+
+      case 0x2000:
+        ops::callSubroutine(vm, instruction);
+        break;
 
       default:
       break;
