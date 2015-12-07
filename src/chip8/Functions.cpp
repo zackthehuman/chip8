@@ -16,7 +16,10 @@ namespace chip8 {
     ops::setVx,
     ops::addToVx,
     ops::disambiguate0x8,
-    ops::skipIfVxNotEqualsVy
+    ops::skipIfVxNotEqualsVy,
+    ops::setIToAddress,
+    ops::jumpPlusV0,
+    ops::randomVxModNn
   } };
 
   Instruction fetch(VirtualMachine & vm) {
@@ -32,17 +35,8 @@ namespace chip8 {
     // FUNCTION_TABLE[instruction & OP_MASK](vm, instruction);
 
     switch(instruction & OP_MASK) {
-      case 0x0:
-        if(0x00E0 == instruction) {
-          ops::clearScreen(vm, instruction);
-          break;
-        } else if(0x00EE == instruction) {
-          ops::returnFromSubroutine(vm, instruction);
-          break;
-        } else {
-          ops::callProgramAtAddress(vm, instruction);
-          break;
-        }
+      case 0x0000:
+        ops::disambiguate0x0(vm, instruction);
         break;
 
       case 0x1000:
