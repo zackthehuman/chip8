@@ -45,7 +45,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     chip8::ops::skipIfEquals(vm, 0x3D42);
 
-    REQUIRE( vm.programCounter == (pc + 1) );
+    REQUIRE( vm.programCounter == (pc + 2) );
   }
 
   SECTION( "ops::skipIfEquals does not increment the program counter by 1 if VX != NN" ) {
@@ -63,7 +63,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     chip8::ops::skipIfNotEquals(vm, 0x4D99);
 
-    REQUIRE( vm.programCounter == (pc + 1) );
+    REQUIRE( vm.programCounter == (pc + 2) );
   }
 
   SECTION( "ops::skipIfNotEquals does not increment the program counter by 1 if VX == NN" ) {
@@ -82,7 +82,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     chip8::ops::skipIfVxEqualsVy(vm, 0x53D0);
 
-    REQUIRE( vm.programCounter == (pc + 1) );
+    REQUIRE( vm.programCounter == (pc + 2) );
   }
 
   SECTION( "ops::skipIfVxEqualsVy does not increment the program counter by 1 if VX != VY" ) {

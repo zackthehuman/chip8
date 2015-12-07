@@ -52,7 +52,7 @@ namespace chip8 {
       auto value = vm.registers[x];
 
       if(value == nn) {
-        vm.programCounter += 1;
+        vm.programCounter += 2;
       }
     }
 
@@ -65,7 +65,7 @@ namespace chip8 {
       auto value = vm.registers[x];
 
       if(value != nn) {
-        vm.programCounter += 1;
+        vm.programCounter += 2;
       }
     }
 
@@ -78,7 +78,7 @@ namespace chip8 {
       auto registerY = vm.registers[y];
 
       if(registerX == registerY) {
-        vm.programCounter += 1;
+        vm.programCounter += 2;
       }
     }
 
@@ -166,6 +166,19 @@ namespace chip8 {
       auto registerY = vm.registers[y];
 
       vm.registers[x] = registerX ^ registerY;
+    }
+
+    void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      if(registerX != registerY) {
+        vm.programCounter += 2;
+      }
     }
   }
 }
