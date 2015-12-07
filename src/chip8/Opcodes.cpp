@@ -6,6 +6,16 @@
 
 namespace chip8 {
   namespace ops {
+    void disambiguate0x0(VirtualMachine & vm, Instruction instruction) {
+      if(0x00E0 == instruction) {
+        clearScreen(vm, instruction);
+      } else if(0x00EE == instruction) {
+        returnFromSubroutine(vm, instruction);
+      } else {
+        callProgramAtAddress(vm, instruction);
+      }
+    }
+
     void jump(VirtualMachine & vm, Instruction instruction) {
       vm.programCounter = getAddress(instruction);
     }

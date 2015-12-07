@@ -1,8 +1,19 @@
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include "chip8/Opcodes.hpp"
+#include <array>
+#include <functional>
 
 namespace chip8 {
+
+  std::array<std::function<void(VirtualMachine &, Instruction)>, 16> FUNCTION_TABLE { {
+    ops::disambiguate0x0,
+    ops::jump,
+    ops::callSubroutine,
+    ops::skipIfEquals,
+    ops::skipIfNotEquals,
+    ops::skipIfVxEqualsVy
+  } };
 
   Instruction fetch(VirtualMachine & vm) {
     auto instruction = vm.memory[vm.programCounter++];

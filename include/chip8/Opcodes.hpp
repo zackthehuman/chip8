@@ -5,6 +5,7 @@ namespace chip8 {
   struct VirtualMachine;
 
   namespace ops {
+    void disambiguate0x0(VirtualMachine & vm, Instruction instruction);
     void jump(VirtualMachine & vm, Instruction instruction);
     void clearScreen(VirtualMachine & vm, Instruction instruction);
     void returnFromSubroutine(VirtualMachine & vm, Instruction instruction);
