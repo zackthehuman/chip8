@@ -125,6 +125,9 @@ namespace chip8 {
           break;
 
         case 0x5:
+          subtractVxVyUpdateCarry(vm, instruction);
+          break;
+
         case 0x6:
         case 0x7:
         case 0xE:

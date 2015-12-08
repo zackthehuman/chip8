@@ -274,6 +274,38 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0xF] == 0x00 );
   }
 
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxVyUpdateCarry, subtracts VY from VX, VF = 1 if there's no borrow" ) {
+    vm.registers[0x0] = 0xFF;
+    vm.registers[0x1] = 0x01;
+
+    chip8::ops::disambiguate0x8(vm, 0x8015);
+
+    REQUIRE( vm.registers[0x0] == 0xFE );
+    REQUIRE( vm.registers[0xF] == 0x01 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxVyUpdateCarry, subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x05;
+    vm.registers[0x1] = 0x07;
+
+    chip8::ops::disambiguate0x8(vm, 0x8015);
+
+    chip8::Byte expected { static_cast<chip8::Byte>(5 - 7) };
+
+    REQUIRE( vm.registers[0x0] == expected );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxVyUpdateCarry, subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x00;
+    vm.registers[0x1] = 0x01;
+
+    chip8::ops::disambiguate0x8(vm, 0x8015);
+
+    REQUIRE( vm.registers[0x0] == 0xFF );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
   SECTION( "ops::skipIfVxNotEqualsVy increments the program counter by 2 if VX != VY" ) {
     vm.registers[0x3] = 0x42;
     vm.registers[0xD] = 0x24;
