@@ -20,6 +20,27 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == 0x234 );
   }
 
+  SECTION( "ops::clearScreen clears the graphics buffer" ) {
+    // TODO: Use randomized positions and values.
+    vm.graphics[0] = 0xFF;
+    vm.graphics[15] = 0x4;
+
+    REQUIRE( vm.graphics[0] == 0xFF );
+    REQUIRE( vm.graphics[15] == 0x4 );
+
+    chip8::ops::clearScreen(vm, 0x00E0);
+
+    bool isAllZeroes = true;
+
+    for(std::size_t i = 0, size = vm.graphics.size(); i < size; i++) {
+      if(vm.graphics[i] != 0) {
+        isAllZeroes = false;
+      }
+    }
+
+    REQUIRE( isAllZeroes == true );
+  }
+
   SECTION( "ops::callSubroutine changes the program counter, pushes old program counter to stack" ) {
     vm.programCounter = 0x42;
 
@@ -172,6 +193,26 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0x0] == (0x11 ^ 0x02) );
   }
 
+  SECTION( "ops::addVxVyUpdateCarry adds VY to VX, VF = 1 if there's a carry" ) {
+    vm.registers[0x0] = 0xFF;
+    vm.registers[0x1] = 0x01;
+
+    chip8::ops::addVxVyUpdateCarry(vm, 0x8014);
+
+    REQUIRE( vm.registers[0x0] == 0x00 );
+    REQUIRE( vm.registers[0xF] == 0x01 );
+  }
+
+  SECTION( "ops::addVxVyUpdateCarry adds VY to VX, VF = 0 if there's no carry" ) {
+    vm.registers[0x0] = 0xFA;
+    vm.registers[0x1] = 0x01;
+
+    chip8::ops::addVxVyUpdateCarry(vm, 0x8014);
+
+    REQUIRE( vm.registers[0x0] == 0xFB );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
   SECTION( "ops::disambiguate0x8 calls ops::xorVxVy when given 0x8003" ) {
     vm.registers[0x0] = 0x11;
     vm.registers[0x1] = 0x02;
@@ -222,4 +263,10 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.registers[0] == (0x13 & 0x42) );
   }
+
+  // SECTION( "ops::blit draws sprites to the graphics buffer" ) {
+  //   chip8::ops::blit(vm, 0xD123);
+
+  //   REQUIRE( vm.registers[0] == (0x13 & 0x42) );
+  // }
 }

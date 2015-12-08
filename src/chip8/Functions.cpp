@@ -3,6 +3,7 @@
 #include "chip8/Opcodes.hpp"
 #include <array>
 #include <functional>
+#include <iostream>
 
 namespace chip8 {
 
@@ -102,5 +103,27 @@ namespace chip8 {
     }
 
     execute(vm, fetch(vm));
+
+//    printGraphicsBufferToConsole(vm);
+  }
+
+  void printGraphicsBufferToConsole(VirtualMachine & vm) {
+    const auto & graphics = vm.graphics;
+    const auto rows = graphics.size();
+
+    for(std::size_t y = 0; y < rows; y++) {
+      const auto pixels = graphics[y];
+      std::uint64_t pixelMask = 0b1000000000000000000000000000000000000000000000000000000000000000;
+
+      for(std::size_t x = 0, size = sizeof(pixels) * 8; x < size; x++) {
+        bool isToggled = (pixels & pixelMask) != 0;
+        std::cout << (isToggled ? "1" : "0");
+        pixelMask >>= 1;
+      }
+
+      std::cout << "\n";
+    }
+
+    std::cout << "\n" << std::endl;
   }
 }

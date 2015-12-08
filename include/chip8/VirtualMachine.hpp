@@ -12,6 +12,7 @@ namespace chip8 {
     Timers timers;
     Stack stack;
     RandomNumberGenerator rng;
+    GraphicsBuffer graphics;
 
     VirtualMachine()
       : memory{}
@@ -21,9 +22,11 @@ namespace chip8 {
       , timers{}
       , stack{}
       , rng{[](Byte seed) { return 7; }}
+      , graphics{}
     {
       memory.fill(0);
       registers.fill(0);
+      graphics.fill(0);
     }
   };
 }

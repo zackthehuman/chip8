@@ -32,9 +32,18 @@ namespace chip8 {
     return { x, y };
   }
 
+  inline std::tuple<Nibble, Nibble, Nibble> getXYN(Instruction ins) {
+    Nibble x = (ins & 0x0F00) >> 8;
+    Nibble y = (ins & 0x00F0) >> 4;
+    Nibble z = (ins & 0x000F);
+    return { x, y, z };
+  }
+
   inline std::tuple<Nibble, Byte> getXNN(Instruction ins) {
     Nibble x = (ins & 0x0F00) >> 8;
     Byte y = (ins & 0x00FF);
     return { x, y };
   }
+
+  void printGraphicsBufferToConsole(VirtualMachine & vm);
 }

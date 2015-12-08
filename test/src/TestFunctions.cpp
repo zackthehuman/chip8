@@ -36,6 +36,18 @@ TEST_CASE( "Byte extraction function", "extracting bytes from opcodes" ) {
     REQUIRE( y == 0x3 );
   }
 
+  SECTION( "getXYN returns the three nibbles from an opcode" ) {
+    const chip8::Instruction opcode = 0x1234;
+    auto result = chip8::getXYN(opcode);
+    chip8::Nibble x, y, z;
+
+    std::tie(x, y, z) = result;
+
+    REQUIRE( x == 0x2 );
+    REQUIRE( y == 0x3 );
+    REQUIRE( z == 0x4 );
+  }
+
   SECTION( "getXNN returns the a nibble and a byte from an opcode" ) {
     const chip8::Instruction opcode = 0x1234;
     auto result = chip8::getXNN(opcode);

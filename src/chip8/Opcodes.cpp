@@ -21,7 +21,7 @@ namespace chip8 {
     }
 
     void clearScreen(VirtualMachine & vm, Instruction instruction) {
-      throw std::runtime_error("Function not implemented");
+      vm.graphics.fill(0);
     }
 
     void returnFromSubroutine(VirtualMachine & vm, Instruction instruction) {
@@ -175,6 +175,27 @@ namespace chip8 {
       vm.registers[x] = registerX ^ registerY;
     }
 
+    void addVxVyUpdateCarry(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      Byte result = registerY + registerX;
+
+      // Update VF with the carry bit.
+      // For unsigned integers we can just check for overflow to determine carry.
+      if(result < registerX) {
+        vm.registers[0xF] = 1;
+      } else {
+        vm.registers[0xF] = 0;
+      }
+
+      vm.registers[x] = result;
+    }
+
     void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction) {
       Byte x, y;
 
@@ -209,6 +230,25 @@ namespace chip8 {
       const auto random = vm.rng(0);
 
       vm.registers[x] = random & nn;
+    }
+
+    void blit(VirtualMachine & vm, Instruction instruction) {
+      // Nibble x, y, n;
+      // Address pointer = vm.I;
+
+      // std::tie(x, y, n) = getXYN(instruction);
+
+      // const auto startX = vm.registers[x];
+      // const auto startY = vm.registers[y];
+
+      // for(std::size_t i = 0; i < n; i++) {
+      //   auto offsetX = x;
+      //   auto offsetY = startY + i;
+
+
+      // }
+
+      throw std::runtime_error("Function not implemented yet.");
     }
   }
 }

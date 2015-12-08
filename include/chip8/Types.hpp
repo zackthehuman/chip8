@@ -15,5 +15,7 @@ namespace chip8 {
   template <std::size_t N>
   using ByteArray = std::array<Byte, N>;
 
+  using GraphicsBuffer = std::array<std::uint64_t, 32>;
+
   using RandomNumberGenerator = std::function<Byte(Byte seed)>;
 }
