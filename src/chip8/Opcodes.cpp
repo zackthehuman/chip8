@@ -2,6 +2,8 @@
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include <exception>
+#include <bitset>
+#include <iomanip>
 #include <iostream>
 
 namespace chip8 {
@@ -326,22 +328,34 @@ namespace chip8 {
     }
 
     void blit(VirtualMachine & vm, Instruction instruction) {
-      // Nibble x, y, n;
-      // Address pointer = vm.I;
+      Nibble x, y, n;
+      Address pointer = vm.I;
 
-      // std::tie(x, y, n) = getXYN(instruction);
+      std::tie(x, y, n) = getXYN(instruction);
 
-      // const auto startX = vm.registers[x];
-      // const auto startY = vm.registers[y];
+      const auto startX = vm.registers[x];
+      const auto startY = vm.registers[y];
+      const std::uint64_t rowProjection = 0b0000000000000000000000000000000000000000000000000000000000000000;
 
-      // for(std::size_t i = 0; i < n; i++) {
-      //   auto offsetX = x;
-      //   auto offsetY = startY + i;
+      // Loop over sprite rows that need to be rendered.
+      for(std::size_t i = 0; i < n; i++) {
+        const auto spriteRow = vm.memory[pointer + i];
+        auto offsetX = startX;
+        auto offsetY = startY + i;
+        auto shift = ((sizeof(rowProjection) - sizeof(spriteRow)) * 8) - offsetX;
 
+        // Calculate a shift to the left enough to move the sprite all the way
+        // to the left-most position, like a typewriter moving to a new line.
+        const auto spriteProjection = ((rowProjection | spriteRow) << shift);
+        //const auto spriteProjection = ((rowProjection | spriteRow)) << shift;
+        //std::cout << std::setfill('0') << std::bitset<8>{spriteRow} << "\n" << std::bitset<64>{spriteProjection} << std::endl;
 
-      // }
+        //const auto previousData = vm.graphics[offsetY];
 
-      throw std::runtime_error("Function not implemented yet.");
+        vm.graphics[offsetY] ^= spriteProjection;
+      }
+
+      //throw std::runtime_error("Function not implemented yet.");
     }
   }
 }

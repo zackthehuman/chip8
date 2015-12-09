@@ -484,9 +484,43 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0] == (0x13 & 0x42) );
   }
 
-  // SECTION( "ops::blit draws sprites to the graphics buffer" ) {
-  //   chip8::ops::blit(vm, 0xD123);
+  SECTION( "ops::blit draws sprites to the graphics buffer at the correct X position" ) {
+    vm.memory[0] = 0b10000001;
+    vm.registers[0] = 0x5;
+    vm.registers[1] = 0x0;
 
-  //   REQUIRE( vm.registers[0] == (0x13 & 0x42) );
-  // }
+    chip8::ops::blit(vm, 0xD011);
+
+    REQUIRE( vm.graphics[0] == 0b0000010000001000000000000000000000000000000000000000000000000000 );
+  }
+
+  SECTION( "ops::blit draws sprites to the graphics buffer at the correct Y position" ) {
+    vm.memory[0] = 0b10000001;
+    vm.registers[0] = 0x0;
+    vm.registers[1] = 0x3;
+
+    chip8::ops::blit(vm, 0xD011);
+
+    REQUIRE( vm.graphics[3] == 0b1000000100000000000000000000000000000000000000000000000000000000 );
+  }
+
+  SECTION( "ops::blit draws sprites to the graphics buffer with the correct height at the correct coordinate" ) {
+    vm.memory[0] = 0b11111111;
+    vm.memory[1] = 0b10000001;
+    vm.memory[2] = 0b10000001;
+    vm.memory[3] = 0b10111101;
+    vm.registers[0] = 0x1;
+    vm.registers[1] = 0x3;
+
+    chip8::ops::blit(vm, 0xD014);
+
+    REQUIRE( vm.graphics[0] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[1] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[2] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[3] == 0b0111111110000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[4] == 0b0100000010000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[5] == 0b0100000010000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[6] == 0b0101111010000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[7] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
+  }
 }
