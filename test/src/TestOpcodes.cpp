@@ -306,6 +306,106 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0xF] == 0x00 );
   }
 
+  SECTION( "ops::rightshiftVx shifts VX right by 1, saves least-significant bit in VF before shifting (0 bit)" ) {
+    vm.registers[0x0] = 0b00000010;
+
+    chip8::ops::rightshiftVx(vm, 0x8016);
+
+    REQUIRE( vm.registers[0x0] == 0b00000001 );
+    REQUIRE( vm.registers[0xF] == 0 );
+  }
+
+  SECTION( "ops::rightshiftVx shifts VX right by 1, saves least-significant bit in VF before shifting (1 bit)" ) {
+    vm.registers[0x0] = 0b00001101;
+
+    chip8::ops::rightshiftVx(vm, 0x8016);
+
+    REQUIRE( vm.registers[0x0] == 0b00000110 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::rightshiftVx, shifts VX right by 1, saves least-significant bit in VF before shifting (0 bit)" ) {
+    vm.registers[0x0] = 0b00000010;
+
+    chip8::ops::rightshiftVx(vm, 0x8016);
+
+    REQUIRE( vm.registers[0x0] == 0b00000001 );
+    REQUIRE( vm.registers[0xF] == 0 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::rightshiftVx, shifts VX right by 1, saves least-significant bit in VF before shifting (1 bit)" ) {
+    vm.registers[0x0] = 0b00001101;
+
+    chip8::ops::rightshiftVx(vm, 0x8016);
+
+    REQUIRE( vm.registers[0x0] == 0b00000110 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
+
+  SECTION( "ops::subtractVxFromVyUpdateCarry subtracts VY from VX, VF = 1 if there's no borrow" ) {
+    vm.registers[0x0] = 0x01;
+    vm.registers[0x1] = 0xFF;
+
+    chip8::ops::subtractVxFromVyUpdateCarry(vm, 0x8017);
+
+    REQUIRE( vm.registers[0x0] == 0xFE );
+    REQUIRE( vm.registers[0xF] == 0x01 );
+  }
+
+  SECTION( "ops::subtractVxFromVyUpdateCarry subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x07;
+    vm.registers[0x1] = 0x05;
+
+    chip8::ops::subtractVxFromVyUpdateCarry(vm, 0x8017);
+
+    chip8::Byte expected { static_cast<chip8::Byte>(5 - 7) };
+
+    REQUIRE( vm.registers[0x0] == expected );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
+  SECTION( "ops::subtractVxFromVyUpdateCarry subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x01;
+    vm.registers[0x1] = 0x00;
+
+    chip8::ops::subtractVxFromVyUpdateCarry(vm, 0x8017);
+
+    REQUIRE( vm.registers[0x0] == 0xFF );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxFromVyUpdateCarry, subtracts VY from VX, VF = 1 if there's no borrow" ) {
+    vm.registers[0x0] = 0x01;
+    vm.registers[0x1] = 0xFF;
+
+    chip8::ops::disambiguate0x8(vm, 0x8017);
+
+    REQUIRE( vm.registers[0x0] == 0xFE );
+    REQUIRE( vm.registers[0xF] == 0x01 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxFromVyUpdateCarry, subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x07;
+    vm.registers[0x1] = 0x05;
+
+    chip8::ops::disambiguate0x8(vm, 0x8017);
+
+    chip8::Byte expected { static_cast<chip8::Byte>(5 - 7) };
+
+    REQUIRE( vm.registers[0x0] == expected );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::subtractVxFromVyUpdateCarry, subtracts VY from VX, VF = 0 if there is a borrow" ) {
+    vm.registers[0x0] = 0x01;
+    vm.registers[0x1] = 0x00;
+
+    chip8::ops::disambiguate0x8(vm, 0x8017);
+
+    REQUIRE( vm.registers[0x0] == 0xFF );
+    REQUIRE( vm.registers[0xF] == 0x00 );
+  }
+
   SECTION( "ops::skipIfVxNotEqualsVy increments the program counter by 2 if VX != VY" ) {
     vm.registers[0x3] = 0x42;
     vm.registers[0xD] = 0x24;

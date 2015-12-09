@@ -23,6 +23,9 @@ namespace chip8 {
     void xorVxVy(VirtualMachine & vm, Instruction instruction);
     void addVxVyUpdateCarry(VirtualMachine & vm, Instruction instruction);
     void subtractVxVyUpdateCarry(VirtualMachine & vm, Instruction instruction);
+    void rightshiftVx(VirtualMachine & vm, Instruction instruction);
+    void subtractVxFromVyUpdateCarry(VirtualMachine & vm, Instruction instruction);
+    void leftshiftVx(VirtualMachine & vm, Instruction instruction);
     void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction);
     void setIToAddress(VirtualMachine & vm, Instruction instruction);
     void jumpPlusV0(VirtualMachine & vm, Instruction instruction);

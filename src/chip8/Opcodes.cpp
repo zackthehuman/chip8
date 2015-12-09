@@ -129,7 +129,13 @@ namespace chip8 {
           break;
 
         case 0x6:
+          rightshiftVx(vm, instruction);
+          break;
+
         case 0x7:
+          subtractVxFromVyUpdateCarry(vm, instruction);
+          break;
+
         case 0xE:
 
         default:
@@ -225,6 +231,59 @@ namespace chip8 {
       }
 
       vm.registers[x] = result;
+    }
+
+    void rightshiftVx(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      const auto registerX = vm.registers[x];
+
+      // Grab the least-significant bit.
+      const Byte lsb = registerX & 0b00000001;
+
+      vm.registers[x] = registerX >> 1;
+      vm.registers[0xF] = lsb;
+    }
+
+    void subtractVxFromVyUpdateCarry(VirtualMachine & vm, Instruction instruction) {
+      Byte x, y;
+
+      std::tie(x, y) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto registerY = vm.registers[y];
+
+      const bool requiresBorrow = registerX > registerY;
+
+      // VX = VY - VX
+      // Inverting and adding plus one allows us to perform addition instead of
+      // subtraction, since these are unsigned numbers.
+      Byte result = registerY + (~registerX + 1);
+
+      // Update VF with the carry bit.
+      if(requiresBorrow) {
+        vm.registers[0xF] = 0;
+      } else {
+        vm.registers[0xF] = 1;
+      }
+
+      vm.registers[x] = result;
+    }
+
+    void leftshiftVx(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      const auto registerX = vm.registers[x];
+
+      // Grab the most-significant bit.
+      const Byte msb = registerX & 0b10000000;
+
+      vm.registers[x] = registerX << 1;
+      vm.registers[0xF] = msb;
     }
 
     void skipIfVxNotEqualsVy(VirtualMachine & vm, Instruction instruction) {
