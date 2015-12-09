@@ -350,7 +350,7 @@ namespace chip8 {
         //const auto spriteProjection = ((rowProjection | spriteRow)) << shift;
         //std::cout << std::setfill('0') << std::bitset<8>{spriteRow} << "\n" << std::bitset<64>{spriteProjection} << std::endl;
 
-        const auto previousData = vm.graphics[offsetY];
+        //const auto previousData = vm.graphics[offsetY];
 
         vm.graphics[offsetY] ^= spriteProjection;
 

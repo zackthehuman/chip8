@@ -61,6 +61,36 @@ TEST_CASE( "Byte extraction function", "extracting bytes from opcodes" ) {
   }
 }
 
+TEST_CASE( "Integer rotation functions", "rotating unsigned integers left and right" ) {
+
+  SECTION( "rotateLeft rotates to the left by a specificed amount" ) {
+    chip8::Byte input = 0b01000001;
+
+    input = chip8::rotateLeft(input, 1);
+    REQUIRE( input == 0b10000010 );
+    input = chip8::rotateLeft(input, 1);
+    REQUIRE( input == 0b00000101 );
+    input = chip8::rotateLeft(input, 2);
+    REQUIRE( input == 0b00010100 );
+    input = chip8::rotateLeft(input, 3);
+    REQUIRE( input == 0b10100000 );
+  }
+
+  SECTION( "rotateRight rotates to the right by a specificed amount" ) {
+    chip8::Byte input = 0b01000001;
+
+    input = chip8::rotateRight(input, 1);
+    REQUIRE( input == 0b10100000 );
+    input = chip8::rotateRight(input, 1);
+    REQUIRE( input == 0b01010000 );
+    input = chip8::rotateRight(input, 2);
+    REQUIRE( input == 0b00010100 );
+    input = chip8::rotateRight(input, 3);
+    REQUIRE( input == 0b10000010 );
+  }
+
+}
+
 TEST_CASE( "Basic VM functions", "fetch return value and side effects" ) {
   chip8::VirtualMachine vm;
 

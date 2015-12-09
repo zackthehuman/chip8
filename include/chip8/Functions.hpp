@@ -1,7 +1,9 @@
 #pragma once
 #include "chip8/Types.hpp"
 #include "chip8/Constants.hpp"
+#include <climits>
 #include <tuple>
+#include <type_traits>
 
 namespace chip8 {
   struct VirtualMachine;
@@ -43,6 +45,18 @@ namespace chip8 {
     Nibble x = (ins & 0x0F00) >> 8;
     Byte y = (ins & 0x00FF);
     return { x, y };
+  }
+
+  template <typename T>
+  constexpr T rotateLeft(T val, unsigned int moves) {
+    static_assert(std::is_unsigned<T>::value, "rotateLeft only makes sense for unsigned types");
+    return (val << moves) | (val >> (sizeof(T) * CHAR_BIT - moves));
+  }
+
+  template<class T>
+  constexpr T rotateRight(T val, unsigned int moves) {
+    static_assert(std::is_unsigned<T>::value, "rotateRight only makes sense for unsigned types");
+    return (val >> moves) | (val << (sizeof(T) * CHAR_BIT - moves));
   }
 
   void printGraphicsBufferToConsole(VirtualMachine & vm);
