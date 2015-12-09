@@ -341,16 +341,13 @@ namespace chip8 {
       for(std::size_t i = 0; i < n; i++) {
         const auto spriteRow = vm.memory[pointer + i];
         auto offsetX = startX;
-        auto offsetY = startY + i;
-        auto shift = ((sizeof(rowProjection) - sizeof(spriteRow)) * 8) - offsetX; // TODO: Need to use a rotate here.
+        auto offsetY = (startY + i) % 32;
+        auto shift = ((sizeof(rowProjection) - sizeof(spriteRow)) * 8) % 64;
 
         // Calculate a shift to the left enough to move the sprite all the way
         // to the left-most position, like a typewriter moving to a new line.
-        const auto spriteProjection = ((rowProjection | spriteRow) << shift);
-        //const auto spriteProjection = ((rowProjection | spriteRow)) << shift;
-        //std::cout << std::setfill('0') << std::bitset<8>{spriteRow} << "\n" << std::bitset<64>{spriteProjection} << std::endl;
-
-        //const auto previousData = vm.graphics[offsetY];
+        // Then we rotate right to allow for horizontal positioning and wrapping.
+        const auto spriteProjection = rotateRight((rowProjection | spriteRow) << shift, offsetX);
 
         vm.graphics[offsetY] ^= spriteProjection;
 
