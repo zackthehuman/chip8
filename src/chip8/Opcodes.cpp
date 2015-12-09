@@ -342,7 +342,7 @@ namespace chip8 {
         const auto spriteRow = vm.memory[pointer + i];
         auto offsetX = startX;
         auto offsetY = startY + i;
-        auto shift = ((sizeof(rowProjection) - sizeof(spriteRow)) * 8) - offsetX;
+        auto shift = ((sizeof(rowProjection) - sizeof(spriteRow)) * 8) - offsetX; // TODO: Need to use a rotate here.
 
         // Calculate a shift to the left enough to move the sprite all the way
         // to the left-most position, like a typewriter moving to a new line.
@@ -350,9 +350,23 @@ namespace chip8 {
         //const auto spriteProjection = ((rowProjection | spriteRow)) << shift;
         //std::cout << std::setfill('0') << std::bitset<8>{spriteRow} << "\n" << std::bitset<64>{spriteProjection} << std::endl;
 
-        //const auto previousData = vm.graphics[offsetY];
+        const auto previousData = vm.graphics[offsetY];
 
         vm.graphics[offsetY] ^= spriteProjection;
+
+        const auto diff = ~vm.graphics[offsetY] & spriteProjection;
+
+        if(diff != 0) {
+          vm.registers[0xF] = 1;
+        } else {
+          vm.registers[0xF] = 0;
+        }
+
+        // std::cout << std::setfill('0') <<
+        //   std::bitset<8>{spriteRow} << "\n" <<
+        //   std::bitset<64>{spriteProjection} << "\n" <<
+        //   std::bitset<64>{diff} << std::endl;
+
       }
 
       //throw std::runtime_error("Function not implemented yet.");
