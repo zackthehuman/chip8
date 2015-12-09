@@ -406,6 +406,42 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0xF] == 0x00 );
   }
 
+    SECTION( "ops::leftshiftVx shifts VX left by 1, saves most-significant bit in VF before shifting (0 bit)" ) {
+    vm.registers[0x0] = 0b01000000;
+
+    chip8::ops::leftshiftVx(vm, 0x801E);
+
+    REQUIRE( vm.registers[0x0] == 0b10000000 );
+    REQUIRE( vm.registers[0xF] == 0 );
+  }
+
+  SECTION( "ops::leftshiftVx shifts VX left by 1, saves most-significant bit in VF before shifting (1 bit)" ) {
+    vm.registers[0x0] = 0b10001100;
+
+    chip8::ops::leftshiftVx(vm, 0x801E);
+
+    REQUIRE( vm.registers[0x0] == 0b00011000 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::leftshiftVx, shifts VX left by 1, saves most-significant bit in VF before shifting (0 bit)" ) {
+    vm.registers[0x0] = 0b01000000;
+
+    chip8::ops::leftshiftVx(vm, 0x801E);
+
+    REQUIRE( vm.registers[0x0] == 0b10000000 );
+    REQUIRE( vm.registers[0xF] == 0 );
+  }
+
+  SECTION( "ops::disambiguate0x8 calls ops::leftshiftVx, shifts VX left by 1, saves most-significant bit in VF before shifting (1 bit)" ) {
+    vm.registers[0x0] = 0b10001100;
+
+    chip8::ops::leftshiftVx(vm, 0x801E);
+
+    REQUIRE( vm.registers[0x0] == 0b00011000 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
+
   SECTION( "ops::skipIfVxNotEqualsVy increments the program counter by 2 if VX != VY" ) {
     vm.registers[0x3] = 0x42;
     vm.registers[0xD] = 0x24;

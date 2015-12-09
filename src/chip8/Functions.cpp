@@ -8,19 +8,22 @@
 namespace chip8 {
 
   std::array<std::function<void(VirtualMachine &, Instruction)>, 16> FUNCTION_TABLE { {
-    ops::disambiguate0x0,
-    ops::jump,
-    ops::callSubroutine,
-    ops::skipIfEquals,
-    ops::skipIfNotEquals,
-    ops::skipIfVxEqualsVy,
-    ops::setVx,
-    ops::addToVx,
-    ops::disambiguate0x8,
-    ops::skipIfVxNotEqualsVy,
-    ops::setIToAddress,
-    ops::jumpPlusV0,
-    ops::randomVxModNn
+    ops::disambiguate0x0,     // 0x0000
+    ops::jump,                // 0x1000
+    ops::callSubroutine,      // 0x2000
+    ops::skipIfEquals,        // 0x3000
+    ops::skipIfNotEquals,     // 0x4000
+    ops::skipIfVxEqualsVy,    // 0x5000
+    ops::setVx,               // 0x6000
+    ops::addToVx,             // 0x7000
+    ops::disambiguate0x8,     // 0x8000
+    ops::skipIfVxNotEqualsVy, // 0x9000
+    ops::setIToAddress,       // 0xA000
+    ops::jumpPlusV0,          // 0xB000
+    ops::randomVxModNn        // 0xC000
+                              // 0xD000
+                              // 0xE000
+                              // 0xF000
   } };
 
   Instruction fetch(VirtualMachine & vm) {

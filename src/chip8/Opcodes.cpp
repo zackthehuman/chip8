@@ -137,6 +137,8 @@ namespace chip8 {
           break;
 
         case 0xE:
+          leftshiftVx(vm, instruction);
+          break;
 
         default:
 
@@ -279,8 +281,9 @@ namespace chip8 {
 
       const auto registerX = vm.registers[x];
 
-      // Grab the most-significant bit.
-      const Byte msb = registerX & 0b10000000;
+      // Grab the most-significant bit. Need to shift it over to the right
+      // so that the value of VF is either 0 or 1.
+      const Byte msb = (registerX & 0b10000000) >> 7;
 
       vm.registers[x] = registerX << 1;
       vm.registers[0xF] = msb;
