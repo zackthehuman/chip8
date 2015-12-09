@@ -2,7 +2,9 @@
 #include "chip8/VirtualMachine.hpp"
 #include "chip8/Opcodes.hpp"
 #include <array>
+#include <bitset>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 
 namespace chip8 {
@@ -106,8 +108,6 @@ namespace chip8 {
     }
 
     execute(vm, fetch(vm));
-
-//    printGraphicsBufferToConsole(vm);
   }
 
   void printGraphicsBufferToConsole(VirtualMachine & vm) {
@@ -116,15 +116,7 @@ namespace chip8 {
 
     for(std::size_t y = 0; y < rows; y++) {
       const auto pixels = graphics[y];
-      std::uint64_t pixelMask = 0b1000000000000000000000000000000000000000000000000000000000000000;
-
-      for(std::size_t x = 0, size = sizeof(pixels) * 8; x < size; x++) {
-        bool isToggled = (pixels & pixelMask) != 0;
-        std::cout << (isToggled ? "1" : "0");
-        pixelMask >>= 1;
-      }
-
-      std::cout << "\n";
+      std::cout << std::setfill('0') << std::bitset<64>{pixels} << "\n";
     }
 
     std::cout << "\n" << std::endl;
