@@ -546,6 +546,24 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.registers[0xF] == 0 );
   }
 
+  SECTION( "ops::blit draws sprites to the graphics buffer, wrapping if necessary vertically" ) {
+    vm.memory[0] = 0b11111111;
+    vm.memory[1] = 0b10000001;
+    vm.memory[2] = 0b10000001;
+    vm.memory[3] = 0b10111101;
+    vm.registers[0] = 0x3C;
+    vm.registers[1] = 0x1E; // 30 pixels from the top
+
+    chip8::ops::blit(vm, 0xD014);
+
+    REQUIRE( vm.graphics[0] == 0b0001000000000000000000000000000000000000000000000000000000001000 );
+    REQUIRE( vm.graphics[1] == 0b1101000000000000000000000000000000000000000000000000000000001011 );
+    REQUIRE( vm.graphics[2] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
+    REQUIRE( vm.graphics[30] == 0b1111000000000000000000000000000000000000000000000000000000001111 );
+    REQUIRE( vm.graphics[31] == 0b0001000000000000000000000000000000000000000000000000000000001000 );
+    REQUIRE( vm.registers[0xF] == 0 );
+  }
+
   SECTION( "ops::blit inverts pixels and sets VF to 1 if a pixel was turned off" ) {
     vm.memory[0] = 0b11111111;
     vm.memory[1] = 0b10000001;
@@ -572,4 +590,6 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.graphics[7] == 0b0000000000000000000000000000000000000000000000000000000000000000 );
     REQUIRE( vm.registers[0xF] == 1 );
   }
+
+
 }
