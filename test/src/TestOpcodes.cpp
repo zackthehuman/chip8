@@ -831,4 +831,15 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     chip8::ops::disambiguate0xF(vm, 0xF629);
     REQUIRE( vm.I == 0x8 * 15 );
   }
+
+  SECTION( "ops::storeBcdOfVx stores the binary-coded decimal value of VX at I" ) {
+    vm.I = 10;
+    vm.registers[0xE] = 128;
+
+    chip8::ops::storeBcdOfVx(vm, 0xFE33);
+
+    REQUIRE( vm.memory[10] == 1 );
+    REQUIRE( vm.memory[11] == 2 );
+    REQUIRE( vm.memory[12] == 8 );
+  }
 }

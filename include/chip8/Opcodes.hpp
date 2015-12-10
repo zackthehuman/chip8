@@ -41,5 +41,6 @@ namespace chip8 {
     void setSoundTimer(VirtualMachine & vm, Instruction instruction);
     void addVxToI(VirtualMachine & vm, Instruction instruction);
     void setIToCharacter(VirtualMachine & vm, Instruction instruction);
+    void storeBcdOfVx(VirtualMachine & vm, Instruction instruction);
   }
 }

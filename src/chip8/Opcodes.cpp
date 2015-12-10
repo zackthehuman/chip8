@@ -431,6 +431,10 @@ namespace chip8 {
           setIToCharacter(vm, instruction);
           break;
 
+        case 0x33:
+          storeBcdOfVx(vm, instruction);
+          break;
+
         default:
         break;
       }
@@ -488,6 +492,22 @@ namespace chip8 {
       const auto memoryOffset = character * 8; // Each character occupies 8 bytes.
 
       vm.I = memoryOffset;
+    }
+
+    void storeBcdOfVx(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      const auto registerX = vm.registers[x];
+
+      const Byte hundreds = registerX / 100;
+      const Byte tens = (registerX - hundreds * 100) / 10;
+      const Byte ones = registerX % 10;
+
+      vm.memory[vm.I] = hundreds;
+      vm.memory[vm.I + 1] = tens;
+      vm.memory[vm.I + 2] = ones;
     }
   }
 }
