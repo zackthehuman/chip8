@@ -31,5 +31,7 @@ namespace chip8 {
     void jumpPlusV0(VirtualMachine & vm, Instruction instruction);
     void randomVxModNn(VirtualMachine & vm, Instruction instruction);
     void blit(VirtualMachine & vm, Instruction instruction);
+    void skipIfKeyIsPressed(VirtualMachine & vm, Instruction instruction);
+    void skipIfKeyIsNotPressed(VirtualMachine & vm, Instruction instruction);
   }
 }

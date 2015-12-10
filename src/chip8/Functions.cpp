@@ -22,8 +22,8 @@ namespace chip8 {
     ops::skipIfVxNotEqualsVy, // 0x9000
     ops::setIToAddress,       // 0xA000
     ops::jumpPlusV0,          // 0xB000
-    ops::randomVxModNn        // 0xC000
-                              // 0xD000
+    ops::randomVxModNn,       // 0xC000
+    ops::blit                 // 0xD000
                               // 0xE000
                               // 0xF000
   } };
@@ -91,6 +91,10 @@ namespace chip8 {
 
       case 0xC000:
         ops::randomVxModNn(vm, instruction);
+        break;
+
+      case 0xD000:
+        ops::blit(vm, instruction);
         break;
 
       default:

@@ -358,15 +358,33 @@ namespace chip8 {
         } else {
           vm.registers[0xF] = 0;
         }
-
-        // std::cout << std::setfill('0') <<
-        //   std::bitset<8>{spriteRow} << "\n" <<
-        //   std::bitset<64>{spriteProjection} << "\n" <<
-        //   std::bitset<64>{diff} << std::endl;
-
       }
+    }
 
-      //throw std::runtime_error("Function not implemented yet.");
+    void skipIfKeyIsPressed(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto shouldSkip = vm.keyboard[registerX] == 1;
+
+      if(shouldSkip) {
+        vm.programCounter += 2;
+      }
+    }
+
+    void skipIfKeyIsNotPressed(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      auto registerX = vm.registers[x];
+      auto shouldSkip = vm.keyboard[registerX] == 0;
+
+      if(shouldSkip) {
+        vm.programCounter += 2;
+      }
     }
   }
 }
