@@ -34,5 +34,7 @@ namespace chip8 {
     void disambiguate0xE(VirtualMachine & vm, Instruction instruction);
     void skipIfKeyIsPressed(VirtualMachine & vm, Instruction instruction);
     void skipIfKeyIsNotPressed(VirtualMachine & vm, Instruction instruction);
+    void disambiguate0xF(VirtualMachine & vm, Instruction instruction);
+    void setVxToDelayTimer(VirtualMachine & vm, Instruction instruction);
   }
 }

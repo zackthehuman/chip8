@@ -402,5 +402,26 @@ namespace chip8 {
         vm.programCounter += 2;
       }
     }
+
+    void disambiguate0xF(VirtualMachine & vm, Instruction instruction) {
+      const auto lowByte = getLowByte(instruction);
+
+      switch(lowByte) {
+        case 0x07:
+          setVxToDelayTimer(vm, instruction);
+          break;
+
+        default:
+        break;
+      }
+    }
+
+    void setVxToDelayTimer(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      vm.registers[x] = vm.timers.delay;
+    }
   }
 }

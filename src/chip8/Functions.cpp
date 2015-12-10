@@ -24,8 +24,8 @@ namespace chip8 {
     ops::jumpPlusV0,          // 0xB000
     ops::randomVxModNn,       // 0xC000
     ops::blit,                // 0xD000
-    ops::disambiguate0xE      // 0xE000
-                              // 0xF000
+    ops::disambiguate0xE,     // 0xE000
+    ops::disambiguate0xF      // 0xF000
   } };
 
   Instruction fetch(VirtualMachine & vm) {
@@ -99,6 +99,10 @@ namespace chip8 {
 
       case 0xE000:
         ops::disambiguate0xE(vm, instruction);
+        break;
+
+      case 0xF000:
+        ops::disambiguate0xF(vm, instruction);
         break;
 
       default:

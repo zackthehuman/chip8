@@ -670,4 +670,24 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.programCounter == pc );
   }
+
+  SECTION( "ops::setVxToDelayTimer sets VX to the value of the delay timer" ) {
+    vm.timers.delay = 0x33;
+
+    REQUIRE( vm.registers[0xA] == 0 );
+
+    chip8::ops::setVxToDelayTimer(vm, 0xFA07);
+
+    REQUIRE( vm.registers[0xA] == 0x33 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::setVxToDelayTimer, sets VX to the value of the delay timer" ) {
+    vm.timers.delay = 0x33;
+
+    REQUIRE( vm.registers[0xA] == 0 );
+
+    chip8::ops::disambiguate0xF(vm, 0xFA07);
+
+    REQUIRE( vm.registers[0xA] == 0x33 );
+  }
 }
