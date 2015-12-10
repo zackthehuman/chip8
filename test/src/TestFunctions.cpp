@@ -101,6 +101,8 @@ TEST_CASE( "Basic VM functions", "fetch return value and side effects" ) {
   REQUIRE( vm.timers.sound == 0 );
   REQUIRE( vm.timers.delay == 0 );
   REQUIRE( vm.stack.size() == 0 );
+  REQUIRE( vm.awaitingKeypress == false );
+  REQUIRE( vm.nextKeypressRegister == 0x0 );
 
   SECTION( "fetch should return the value at the current program counter, increasing the program counter by 2" ) {
     vm.memory[0] = 0xA0;
@@ -144,5 +146,55 @@ TEST_CASE( "Basic VM functions", "fetch return value and side effects" ) {
 
     REQUIRE( vm.timers.delay == 0 );
     REQUIRE( vm.timers.sound == 0 );
+  }
+
+  SECTION( "cycle should not update the VM state if waiting for a keypress" ) {
+    const auto pc = vm.programCounter;
+    vm.awaitingKeypress = true;
+    vm.timers.delay = 1;
+    vm.timers.sound = 1;
+
+    chip8::cycle(vm);
+
+    REQUIRE( vm.timers.delay == 1 );
+    REQUIRE( vm.timers.sound == 1 );
+    REQUIRE( vm.awaitingKeypress == true );
+    REQUIRE( vm.programCounter == pc );
+  }
+
+  SECTION( "handleKeypress should set the keyboard bit for the corresponding key" ) {
+    chip8::handleKeypress(vm, 0x0);
+    REQUIRE( vm.keyboard[0x0] == 1 );
+    chip8::handleKeypress(vm, 0x1);
+    REQUIRE( vm.keyboard[0x1] == 1 );
+    chip8::handleKeypress(vm, 0x2);
+    REQUIRE( vm.keyboard[0x2] == 1 );
+    chip8::handleKeypress(vm, 0x3);
+    REQUIRE( vm.keyboard[0x3] == 1 );
+  }
+
+  SECTION( "handleKeypress should set awaitingKeypress to false and store the corresponding key" ) {
+    vm.awaitingKeypress = true;
+    vm.nextKeypressRegister = 0x3;
+
+    chip8::handleKeypress(vm, 0xF);
+    REQUIRE( vm.awaitingKeypress == false );
+    REQUIRE( vm.registers[0x3] == 0xF );
+  }
+
+  SECTION( "handleKeyRelease should unset the keyboard bit for the corresponding key" ) {
+    vm.keyboard[0x0] = 1;
+    vm.keyboard[0x1] = 1;
+    vm.keyboard[0x2] = 1;
+    vm.keyboard[0x3] = 1;
+
+    chip8::handleKeyRelease(vm, 0x0);
+    REQUIRE( vm.keyboard[0x0] == 0 );
+    chip8::handleKeyRelease(vm, 0x1);
+    REQUIRE( vm.keyboard[0x1] == 0 );
+    chip8::handleKeyRelease(vm, 0x2);
+    REQUIRE( vm.keyboard[0x2] == 0 );
+    chip8::handleKeyRelease(vm, 0x3);
+    REQUIRE( vm.keyboard[0x3] == 0 );
   }
 }

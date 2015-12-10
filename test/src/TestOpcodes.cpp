@@ -13,6 +13,7 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
   REQUIRE( vm.timers.sound == 0 );
   REQUIRE( vm.timers.delay == 0 );
   REQUIRE( vm.stack.size() == 0 );
+  REQUIRE( vm.awaitingKeypress == false );
 
   SECTION( "ops::jump changes the program counter" ) {
     chip8::ops::jump(vm, 0x1234);
@@ -689,5 +690,12 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     chip8::ops::disambiguate0xF(vm, 0xFA07);
 
     REQUIRE( vm.registers[0xA] == 0x33 );
+  }
+
+  SECTION( "ops::waitForKeyPress sets the wait flag to true, stores VX in nextKeypressRegister" ) {
+    chip8::ops::waitForKeyPress(vm, 0xF20A);
+
+    REQUIRE( vm.awaitingKeypress == true );
+    REQUIRE( vm.nextKeypressRegister == 0x2 );
   }
 }

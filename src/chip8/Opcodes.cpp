@@ -423,5 +423,14 @@ namespace chip8 {
 
       vm.registers[x] = vm.timers.delay;
     }
+
+    void waitForKeyPress(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      vm.awaitingKeypress = true;
+      vm.nextKeypressRegister = x;
+    }
   }
 }

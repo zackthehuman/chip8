@@ -59,5 +59,9 @@ namespace chip8 {
     return (val >> moves) | (val << (sizeof(T) * CHAR_BIT - moves));
   }
 
+  void handleKeypress(VirtualMachine & vm, Byte key);
+
+  void handleKeyRelease(VirtualMachine & vm, Byte key);
+
   void printGraphicsBufferToConsole(VirtualMachine & vm);
 }

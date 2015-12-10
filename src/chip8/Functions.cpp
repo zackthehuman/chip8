@@ -111,15 +111,30 @@ namespace chip8 {
   }
 
   void cycle(VirtualMachine & vm) {
-    if(vm.timers.delay > 0) {
-      vm.timers.delay -= 1;
+    if(!vm.awaitingKeypress) {
+      if(vm.timers.delay > 0) {
+        vm.timers.delay -= 1;
+      }
+
+      if(vm.timers.sound > 0) {
+        vm.timers.sound -= 1;
+      }
+
+      execute(vm, fetch(vm));
+    }
+  }
+
+  void handleKeypress(VirtualMachine & vm, Byte key) {
+    if(vm.awaitingKeypress) {
+      vm.awaitingKeypress = false;
+      vm.registers[vm.nextKeypressRegister] = key;
     }
 
-    if(vm.timers.sound > 0) {
-      vm.timers.sound -= 1;
-    }
+    vm.keyboard[key] = 1;
+  }
 
-    execute(vm, fetch(vm));
+  void handleKeyRelease(VirtualMachine & vm, Byte key) {
+    vm.keyboard[key] = 0;
   }
 
   void printGraphicsBufferToConsole(VirtualMachine & vm) {

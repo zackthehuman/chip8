@@ -14,6 +14,8 @@ namespace chip8 {
     RandomNumberGenerator rng;
     GraphicsBuffer graphics;
     KeyboardInputs keyboard;
+    bool awaitingKeypress;
+    Byte nextKeypressRegister;
 
     VirtualMachine()
       : memory{}
@@ -25,6 +27,8 @@ namespace chip8 {
       , rng{[](Byte seed) { return 7; }}
       , graphics{}
       , keyboard{}
+      , awaitingKeypress{false}
+      , nextKeypressRegister{0}
     {
       memory.fill(0);
       registers.fill(0);
