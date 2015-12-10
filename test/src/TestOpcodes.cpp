@@ -698,4 +698,61 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.awaitingKeypress == true );
     REQUIRE( vm.nextKeypressRegister == 0x2 );
   }
+
+  SECTION( "ops::disambiguate0xF calls ops::waitForKeyPress, sets the wait flag to true, stores VX in nextKeypressRegister" ) {
+    chip8::ops::disambiguate0xF(vm, 0xF20A);
+
+    REQUIRE( vm.awaitingKeypress == true );
+    REQUIRE( vm.nextKeypressRegister == 0x2 );
+  }
+
+  SECTION( "ops::setDelayTimer sets the delay timer to the value of VX" ) {
+    vm.registers[0x4] = 0x55;
+
+    chip8::ops::setDelayTimer(vm, 0xF415);
+
+    REQUIRE( vm.timers.delay == 0x55 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::setDelayTimer, sets the delay timer to the value of VX" ) {
+    vm.registers[0x4] = 0x55;
+
+    chip8::ops::disambiguate0xF(vm, 0xF415);
+
+    REQUIRE( vm.timers.delay == 0x55 );
+  }
+
+  SECTION( "ops::setSoundTimer sets the sound timer to the value of VX" ) {
+    vm.registers[0x3] = 0x77;
+
+    chip8::ops::setSoundTimer(vm, 0xF318);
+
+    REQUIRE( vm.timers.sound == 0x77 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::setSoundTimer, sets the sound timer to the value of VX" ) {
+    vm.registers[0x3] = 0x77;
+
+    chip8::ops::disambiguate0xF(vm, 0xF318);
+
+    REQUIRE( vm.timers.sound == 0x77 );
+  }
+
+  SECTION( "ops::addVxToI adds VX to I, stores result in I" ) {
+    vm.I = 0x21;
+    vm.registers[0x7] = 0x41;
+
+    chip8::ops::addVxToI(vm, 0xF71E);
+
+    REQUIRE( vm.I == (0x21 + 0x41) );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::addVxToI, adds VX to I, stores result in I" ) {
+    vm.I = 0x21;
+    vm.registers[0x7] = 0x41;
+
+    chip8::ops::disambiguate0xF(vm, 0xF71E);
+
+    REQUIRE( vm.I == (0x21 + 0x41) );
+  }
 }

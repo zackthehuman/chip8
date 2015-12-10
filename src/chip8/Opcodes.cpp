@@ -411,6 +411,22 @@ namespace chip8 {
           setVxToDelayTimer(vm, instruction);
           break;
 
+        case 0x0A:
+          waitForKeyPress(vm, instruction);
+          break;
+
+        case 0x15:
+          setDelayTimer(vm, instruction);
+          break;
+
+        case 0x18:
+          setSoundTimer(vm, instruction);
+          break;
+
+        case 0x1E:
+          addVxToI(vm, instruction);
+          break;
+
         default:
         break;
       }
@@ -431,6 +447,32 @@ namespace chip8 {
 
       vm.awaitingKeypress = true;
       vm.nextKeypressRegister = x;
+    }
+
+    void setDelayTimer(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      vm.timers.delay = vm.registers[x];
+    }
+
+    void setSoundTimer(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      vm.timers.sound = vm.registers[x];
+    }
+
+    void addVxToI(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      const auto registerX = vm.registers[x];
+
+      vm.I = vm.I + registerX;
     }
   }
 }

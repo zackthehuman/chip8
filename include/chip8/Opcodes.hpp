@@ -37,5 +37,8 @@ namespace chip8 {
     void disambiguate0xF(VirtualMachine & vm, Instruction instruction);
     void setVxToDelayTimer(VirtualMachine & vm, Instruction instruction);
     void waitForKeyPress(VirtualMachine & vm, Instruction instruction);
+    void setDelayTimer(VirtualMachine & vm, Instruction instruction);
+    void setSoundTimer(VirtualMachine & vm, Instruction instruction);
+    void addVxToI(VirtualMachine & vm, Instruction instruction);
   }
 }
