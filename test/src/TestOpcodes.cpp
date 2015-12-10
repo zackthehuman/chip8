@@ -842,4 +842,171 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.memory[11] == 2 );
     REQUIRE( vm.memory[12] == 8 );
   }
+
+  SECTION( "ops::disambiguate0xF calls ops::storeBcdOfVx, stores the binary-coded decimal value of VX at I" ) {
+    vm.I = 10;
+    vm.registers[0xE] = 128;
+
+    chip8::ops::disambiguate0xF(vm, 0xFE33);
+
+    REQUIRE( vm.memory[10] == 1 );
+    REQUIRE( vm.memory[11] == 2 );
+    REQUIRE( vm.memory[12] == 8 );
+  }
+
+  SECTION( "ops::storeV0ToVx store V0 to VX in memory starting at I" ) {
+    vm.I = 100;
+    vm.registers[0x0] = 8;
+    vm.registers[0x1] = 6;
+    vm.registers[0x2] = 7;
+    vm.registers[0x3] = 5;
+    vm.registers[0x4] = 3;
+    vm.registers[0x5] = 0;
+    vm.registers[0x6] = 9;
+    vm.registers[0x7] = 41;
+    vm.registers[0x8] = 77;
+    vm.registers[0x9] = 128;
+    vm.registers[0xA] = 2;
+    vm.registers[0xB] = 254;
+    vm.registers[0xC] = 99;
+    vm.registers[0xD] = 33;
+    vm.registers[0xE] = 56;
+    vm.registers[0xF] = 1;
+
+    chip8::ops::storeV0ToVx(vm, 0xFF55);
+
+    REQUIRE( vm.memory[100 + 0x0] == 8 );
+    REQUIRE( vm.memory[100 + 0x1] == 6 );
+    REQUIRE( vm.memory[100 + 0x2] == 7 );
+    REQUIRE( vm.memory[100 + 0x3] == 5 );
+    REQUIRE( vm.memory[100 + 0x4] == 3 );
+    REQUIRE( vm.memory[100 + 0x5] == 0 );
+    REQUIRE( vm.memory[100 + 0x6] == 9 );
+    REQUIRE( vm.memory[100 + 0x7] == 41 );
+    REQUIRE( vm.memory[100 + 0x8] == 77 );
+    REQUIRE( vm.memory[100 + 0x9] == 128 );
+    REQUIRE( vm.memory[100 + 0xA] == 2 );
+    REQUIRE( vm.memory[100 + 0xB] == 254 );
+    REQUIRE( vm.memory[100 + 0xC] == 99 );
+    REQUIRE( vm.memory[100 + 0xD] == 33 );
+    REQUIRE( vm.memory[100 + 0xE] == 56 );
+    REQUIRE( vm.memory[100 + 0xF] == 1 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::storeV0ToVx, store V0 to VX in memory starting at I" ) {
+    vm.I = 100;
+    vm.registers[0x0] = 8;
+    vm.registers[0x1] = 6;
+    vm.registers[0x2] = 7;
+    vm.registers[0x3] = 5;
+    vm.registers[0x4] = 3;
+    vm.registers[0x5] = 0;
+    vm.registers[0x6] = 9;
+    vm.registers[0x7] = 41;
+    vm.registers[0x8] = 77;
+    vm.registers[0x9] = 128;
+    vm.registers[0xA] = 2;
+    vm.registers[0xB] = 254;
+    vm.registers[0xC] = 99;
+    vm.registers[0xD] = 33;
+    vm.registers[0xE] = 56;
+    vm.registers[0xF] = 1;
+
+    chip8::ops::disambiguate0xF(vm, 0xFF55);
+
+    REQUIRE( vm.memory[100 + 0x0] == 8 );
+    REQUIRE( vm.memory[100 + 0x1] == 6 );
+    REQUIRE( vm.memory[100 + 0x2] == 7 );
+    REQUIRE( vm.memory[100 + 0x3] == 5 );
+    REQUIRE( vm.memory[100 + 0x4] == 3 );
+    REQUIRE( vm.memory[100 + 0x5] == 0 );
+    REQUIRE( vm.memory[100 + 0x6] == 9 );
+    REQUIRE( vm.memory[100 + 0x7] == 41 );
+    REQUIRE( vm.memory[100 + 0x8] == 77 );
+    REQUIRE( vm.memory[100 + 0x9] == 128 );
+    REQUIRE( vm.memory[100 + 0xA] == 2 );
+    REQUIRE( vm.memory[100 + 0xB] == 254 );
+    REQUIRE( vm.memory[100 + 0xC] == 99 );
+    REQUIRE( vm.memory[100 + 0xD] == 33 );
+    REQUIRE( vm.memory[100 + 0xE] == 56 );
+    REQUIRE( vm.memory[100 + 0xF] == 1 );
+  }
+
+  SECTION( "ops::loadV0ToVx loads V0 to VX with values from memory starting at I" ) {
+    vm.I = 100;
+    vm.memory[100 + 0x0] = 8;
+    vm.memory[100 + 0x1] = 6;
+    vm.memory[100 + 0x2] = 7;
+    vm.memory[100 + 0x3] = 5;
+    vm.memory[100 + 0x4] = 3;
+    vm.memory[100 + 0x5] = 0;
+    vm.memory[100 + 0x6] = 9;
+    vm.memory[100 + 0x7] = 41;
+    vm.memory[100 + 0x8] = 77;
+    vm.memory[100 + 0x9] = 128;
+    vm.memory[100 + 0xA] = 2;
+    vm.memory[100 + 0xB] = 254;
+    vm.memory[100 + 0xC] = 99;
+    vm.memory[100 + 0xD] = 33;
+    vm.memory[100 + 0xE] = 56;
+    vm.memory[100 + 0xF] = 1;
+
+    chip8::ops::loadV0ToVx(vm, 0xFF65);
+
+    REQUIRE( vm.registers[0x0] == 8 );
+    REQUIRE( vm.registers[0x1] == 6 );
+    REQUIRE( vm.registers[0x2] == 7 );
+    REQUIRE( vm.registers[0x3] == 5 );
+    REQUIRE( vm.registers[0x4] == 3 );
+    REQUIRE( vm.registers[0x5] == 0 );
+    REQUIRE( vm.registers[0x6] == 9 );
+    REQUIRE( vm.registers[0x7] == 41 );
+    REQUIRE( vm.registers[0x8] == 77 );
+    REQUIRE( vm.registers[0x9] == 128 );
+    REQUIRE( vm.registers[0xA] == 2 );
+    REQUIRE( vm.registers[0xB] == 254 );
+    REQUIRE( vm.registers[0xC] == 99 );
+    REQUIRE( vm.registers[0xD] == 33 );
+    REQUIRE( vm.registers[0xE] == 56 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::loadV0ToVx, loads V0 to VX with values from memory starting at I" ) {
+    vm.I = 100;
+    vm.memory[100 + 0x0] = 8;
+    vm.memory[100 + 0x1] = 6;
+    vm.memory[100 + 0x2] = 7;
+    vm.memory[100 + 0x3] = 5;
+    vm.memory[100 + 0x4] = 3;
+    vm.memory[100 + 0x5] = 0;
+    vm.memory[100 + 0x6] = 9;
+    vm.memory[100 + 0x7] = 41;
+    vm.memory[100 + 0x8] = 77;
+    vm.memory[100 + 0x9] = 128;
+    vm.memory[100 + 0xA] = 2;
+    vm.memory[100 + 0xB] = 254;
+    vm.memory[100 + 0xC] = 99;
+    vm.memory[100 + 0xD] = 33;
+    vm.memory[100 + 0xE] = 56;
+    vm.memory[100 + 0xF] = 1;
+
+    chip8::ops::disambiguate0xF(vm, 0xFF65);
+
+    REQUIRE( vm.registers[0x0] == 8 );
+    REQUIRE( vm.registers[0x1] == 6 );
+    REQUIRE( vm.registers[0x2] == 7 );
+    REQUIRE( vm.registers[0x3] == 5 );
+    REQUIRE( vm.registers[0x4] == 3 );
+    REQUIRE( vm.registers[0x5] == 0 );
+    REQUIRE( vm.registers[0x6] == 9 );
+    REQUIRE( vm.registers[0x7] == 41 );
+    REQUIRE( vm.registers[0x8] == 77 );
+    REQUIRE( vm.registers[0x9] == 128 );
+    REQUIRE( vm.registers[0xA] == 2 );
+    REQUIRE( vm.registers[0xB] == 254 );
+    REQUIRE( vm.registers[0xC] == 99 );
+    REQUIRE( vm.registers[0xD] == 33 );
+    REQUIRE( vm.registers[0xE] == 56 );
+    REQUIRE( vm.registers[0xF] == 1 );
+  }
 }

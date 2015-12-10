@@ -42,5 +42,7 @@ namespace chip8 {
     void addVxToI(VirtualMachine & vm, Instruction instruction);
     void setIToCharacter(VirtualMachine & vm, Instruction instruction);
     void storeBcdOfVx(VirtualMachine & vm, Instruction instruction);
+    void storeV0ToVx(VirtualMachine & vm, Instruction instruction);
+    void loadV0ToVx(VirtualMachine & vm, Instruction instruction);
   }
 }

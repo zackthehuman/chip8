@@ -435,6 +435,14 @@ namespace chip8 {
           storeBcdOfVx(vm, instruction);
           break;
 
+        case 0x55:
+          storeV0ToVx(vm, instruction);
+          break;
+
+        case 0x65:
+          loadV0ToVx(vm, instruction);
+          break;
+
         default:
         break;
       }
@@ -508,6 +516,36 @@ namespace chip8 {
       vm.memory[vm.I] = hundreds;
       vm.memory[vm.I + 1] = tens;
       vm.memory[vm.I + 2] = ones;
+    }
+
+    void storeV0ToVx(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      if(x > 0xF) {
+        throw std::runtime_error("Bad register value. Must be less than or equal to 0xF.");
+      }
+
+      // The range includes VX.
+      for(std::size_t i = 0; i <= x; i++) {
+        vm.memory[vm.I + i] = vm.registers[i];
+      }
+    }
+
+    void loadV0ToVx(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      if(x > 0xF) {
+        throw std::runtime_error("Bad register value. Must be less than or equal to 0xF.");
+      }
+
+      // The range includes VX.
+      for(std::size_t i = 0; i <= x; i++) {
+        vm.registers[i] = vm.memory[vm.I + i];
+      }
     }
   }
 }
