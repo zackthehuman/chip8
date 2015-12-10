@@ -13,6 +13,7 @@ namespace chip8 {
     Stack stack;
     RandomNumberGenerator rng;
     GraphicsBuffer graphics;
+    KeyboardInputs keyboard;
 
     VirtualMachine()
       : memory{}
@@ -23,10 +24,12 @@ namespace chip8 {
       , stack{}
       , rng{[](Byte seed) { return 7; }}
       , graphics{}
+      , keyboard{}
     {
       memory.fill(0);
       registers.fill(0);
       graphics.fill(0);
+      keyboard.reset();
     }
   };
 }
