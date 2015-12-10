@@ -143,7 +143,6 @@ namespace chip8 {
           break;
 
         default:
-
           break;
       }
     }
@@ -358,6 +357,23 @@ namespace chip8 {
         } else {
           vm.registers[0xF] = 0;
         }
+      }
+    }
+
+    void disambiguate0xE(VirtualMachine & vm, Instruction instruction) {
+      const auto lowByte = getLowByte(instruction);
+
+      switch(lowByte) {
+        case 0x9E:
+          skipIfKeyIsPressed(vm, instruction);
+          break;
+
+        case 0xA1:
+          skipIfKeyIsNotPressed(vm, instruction);
+          break;
+
+        default:
+        break;
       }
     }
 

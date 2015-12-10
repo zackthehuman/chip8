@@ -611,6 +611,26 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     REQUIRE( vm.programCounter == pc );
   }
 
+  SECTION( "ops::disambiguate0xE calls ops::skipIfKeyIsPressed, increments the program counter by 2 if the key stored in VX is pressed" ) {
+    vm.registers[0x1] = 2; // Look up key 2.
+    vm.keyboard[0x2] = 1; // Turn key 2 on.
+    auto pc = vm.programCounter;
+
+    chip8::ops::disambiguate0xE(vm, 0xE19E);
+
+    REQUIRE( vm.programCounter == (pc + 2) );
+  }
+
+  SECTION( "ops::disambiguate0xE calls ops::skipIfKeyIsPressed, does not increment the program counter by 2 if the key stored in VX is not pressed" ) {
+    vm.registers[0x1] = 2; // Look up key 2.
+    vm.keyboard[0x2] = 0; // Turn key 2 off.
+    auto pc = vm.programCounter;
+
+    chip8::ops::disambiguate0xE(vm, 0xE19E);
+
+    REQUIRE( vm.programCounter == pc );
+  }
+
   SECTION( "ops::skipIfKeyIsNotPressed increments the program counter by 2 if the key stored in VX is not pressed" ) {
     vm.registers[0x1] = 2; // Look up key 2.
     vm.keyboard[0x2] = 0; // Turn key 2 off.
@@ -627,6 +647,26 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
     auto pc = vm.programCounter;
 
     chip8::ops::skipIfKeyIsNotPressed(vm, 0xE1A1);
+
+    REQUIRE( vm.programCounter == pc );
+  }
+
+  SECTION( "ops::disambiguate0xE calls ops::skipIfKeyIsNotPressed, increments the program counter by 2 if the key stored in VX is not pressed" ) {
+    vm.registers[0x1] = 2; // Look up key 2.
+    vm.keyboard[0x2] = 0; // Turn key 2 off.
+    auto pc = vm.programCounter;
+
+    chip8::ops::disambiguate0xE(vm, 0xE1A1);
+
+    REQUIRE( vm.programCounter == (pc + 2) );
+  }
+
+  SECTION( "ops::disambiguate0xE calls ops::skipIfKeyIsNotPressed, does not increment the program counter by 2 if the key stored in VX is pressed" ) {
+    vm.registers[0x1] = 2; // Look up key 2.
+    vm.keyboard[0x2] = 1; // Turn key 2 on.
+    auto pc = vm.programCounter;
+
+    chip8::ops::disambiguate0xE(vm, 0xE1A1);
 
     REQUIRE( vm.programCounter == pc );
   }

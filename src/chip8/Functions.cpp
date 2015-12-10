@@ -23,8 +23,8 @@ namespace chip8 {
     ops::setIToAddress,       // 0xA000
     ops::jumpPlusV0,          // 0xB000
     ops::randomVxModNn,       // 0xC000
-    ops::blit                 // 0xD000
-                              // 0xE000
+    ops::blit,                // 0xD000
+    ops::disambiguate0xE      // 0xE000
                               // 0xF000
   } };
 
@@ -95,6 +95,10 @@ namespace chip8 {
 
       case 0xD000:
         ops::blit(vm, instruction);
+        break;
+
+      case 0xE000:
+        ops::disambiguate0xE(vm, instruction);
         break;
 
       default:
