@@ -755,4 +755,80 @@ TEST_CASE( "VM opcode functions", "execution of opcodes" ) {
 
     REQUIRE( vm.I == (0x21 + 0x41) );
   }
+
+  SECTION( "ops::setIToCharacter sets I to the correct memory location" ) {
+    vm.registers[0x6] = 0x0;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x0 );
+
+    vm.registers[0x6] = 0x1;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 );
+
+    vm.registers[0x6] = 0x2;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 2 );
+
+    vm.registers[0x6] = 0x3;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 3 );
+
+    vm.registers[0x6] = 0x4;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 4 );
+
+    vm.registers[0x6] = 0x5;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 5 );
+
+    vm.registers[0x6] = 0x6;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 6 );
+
+    vm.registers[0x6] = 0x7;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 7 );
+
+    vm.registers[0x6] = 0x8;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 8 );
+
+    vm.registers[0x6] = 0x9;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 9 );
+
+    vm.registers[0x6] = 0xA;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 10 );
+
+    vm.registers[0x6] = 0xB;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 11 );
+
+    vm.registers[0x6] = 0xC;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 12 );
+
+    vm.registers[0x6] = 0xD;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 13 );
+
+    vm.registers[0x6] = 0xE;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 14 );
+
+    vm.registers[0x6] = 0xF;
+    chip8::ops::setIToCharacter(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 15 );
+  }
+
+  SECTION( "ops::disambiguate0xF calls ops::setIToCharacter, sets I to the correct memory location" ) {
+    vm.registers[0x6] = 0x0;
+    chip8::ops::disambiguate0xF(vm, 0xF629);
+    REQUIRE( vm.I == 0x0 );
+
+    vm.registers[0x6] = 0xF;
+    chip8::ops::disambiguate0xF(vm, 0xF629);
+    REQUIRE( vm.I == 0x8 * 15 );
+  }
 }

@@ -427,6 +427,10 @@ namespace chip8 {
           addVxToI(vm, instruction);
           break;
 
+        case 0x29:
+          setIToCharacter(vm, instruction);
+          break;
+
         default:
         break;
       }
@@ -473,6 +477,17 @@ namespace chip8 {
       const auto registerX = vm.registers[x];
 
       vm.I = vm.I + registerX;
+    }
+
+    void setIToCharacter(VirtualMachine & vm, Instruction instruction) {
+      Byte x;
+
+      std::tie(x, std::ignore) = getXY(instruction);
+
+      const auto character = vm.registers[x];
+      const auto memoryOffset = character * 8; // Each character occupies 8 bytes.
+
+      vm.I = memoryOffset;
     }
   }
 }
