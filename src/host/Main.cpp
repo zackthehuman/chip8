@@ -6,10 +6,20 @@
 #include "host/FileUtilities.hpp"
 #include "host/Application.hpp"
 #include <iostream>
+#include <string>
 #include <random>
+#include <vector>
 
 int main(int argc, char** argv) {
   using namespace chip8;
+
+  const std::vector<std::string> allArgs(argv, argv + argc);
+
+  std::string filePath{"brix.chip8"};
+
+  if(allArgs.size() > 1) {
+    filePath = allArgs[1];
+  }
 
   VirtualMachine vm;
   host::Application app{vm};
@@ -23,8 +33,7 @@ int main(int argc, char** argv) {
   };
 
   loadFontData(vm, chip8::FONT_DATA);
-  loadRomData(vm, host::readFileAsChar("brix.chip8"));
-  reset(vm);
+  loadRomData(vm, host::readFileAsChar(filePath));
 
   return app.run();
 }

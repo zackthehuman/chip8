@@ -9,7 +9,7 @@ namespace host {
     : vm{vm}
     , window{nullptr, &SDL_DestroyWindow}
   {
-    if( SDL_Init(SDL_INIT_VIDEO) < 0 ){
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
       std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
     }
 
@@ -30,7 +30,6 @@ namespace host {
   int Application::run() {
 
     chip8::reset(vm);
-    //chip8::printGraphicsBufferToConsole(vm);
 
     if(window == nullptr) {
       std::cout << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
@@ -39,8 +38,8 @@ namespace host {
       SDL_Event e;
       SDL_Rect pixelRect;
 
-      pixelRect.x = 0;
-      pixelRect.y = 0;
+      pixelRect.x = -10;
+      pixelRect.y = -10;
       pixelRect.w = 10;
       pixelRect.h = 10;
 
@@ -81,16 +80,8 @@ namespace host {
           }
         }
 
-
-        // Draw 1 pixel.
-        //SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-        //SDL_RenderFillRect(renderer.get(), &pixelRect);
-
         // Flip buffers.
         SDL_RenderPresent(renderer.get());
-
-        //Wait two seconds
-        //SDL_Delay( 1 );
       }
     }
 
