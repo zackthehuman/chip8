@@ -330,6 +330,8 @@ namespace chip8 {
       Nibble x, y, n;
       Address pointer = vm.I;
 
+      std::cout << "blit" << std::endl;
+
       std::tie(x, y, n) = getXYN(instruction);
 
       const auto startX = vm.registers[x];

@@ -49,6 +49,112 @@ namespace host {
         while(SDL_PollEvent(&e)) {
           if(e.type == SDL_QUIT) {
             quit = true;
+          } else if(e.type == SDL_KEYDOWN) {
+            switch(e.key.keysym.sym) {
+              case SDLK_1:
+                chip8::handleKeypress(vm, 0x0);
+                break;
+              case SDLK_2:
+                chip8::handleKeypress(vm, 0x1);
+                break;
+              case SDLK_3:
+                chip8::handleKeypress(vm, 0x2);
+                break;
+              case SDLK_4:
+                chip8::handleKeypress(vm, 0x3);
+                break;
+              case SDLK_q:
+                chip8::handleKeypress(vm, 0x4);
+                break;
+              case SDLK_w:
+                chip8::handleKeypress(vm, 0x5);
+                break;
+              case SDLK_e:
+                chip8::handleKeypress(vm, 0x6);
+                break;
+              case SDLK_r:
+                chip8::handleKeypress(vm, 0x7);
+                break;
+              case SDLK_a:
+                chip8::handleKeypress(vm, 0x8);
+                break;
+              case SDLK_s:
+                chip8::handleKeypress(vm, 0x9);
+                break;
+              case SDLK_d:
+                chip8::handleKeypress(vm, 0xA);
+                break;
+              case SDLK_f:
+                chip8::handleKeypress(vm, 0xB);
+                break;
+              case SDLK_z:
+                chip8::handleKeypress(vm, 0xC);
+                break;
+              case SDLK_x:
+                chip8::handleKeypress(vm, 0xD);
+                break;
+              case SDLK_c:
+                chip8::handleKeypress(vm, 0xE);
+                break;
+              case SDLK_v:
+                chip8::handleKeypress(vm, 0xF);
+                break;
+              default:
+                break;
+            }
+          } else if(e.type == SDL_KEYUP) {
+            switch(e.key.keysym.sym) {
+              case SDLK_1:
+                chip8::handleKeyRelease(vm, 0x0);
+                break;
+              case SDLK_2:
+                chip8::handleKeyRelease(vm, 0x1);
+                break;
+              case SDLK_3:
+                chip8::handleKeyRelease(vm, 0x2);
+                break;
+              case SDLK_4:
+                chip8::handleKeyRelease(vm, 0x3);
+                break;
+              case SDLK_q:
+                chip8::handleKeyRelease(vm, 0x4);
+                break;
+              case SDLK_w:
+                chip8::handleKeyRelease(vm, 0x5);
+                break;
+              case SDLK_e:
+                chip8::handleKeyRelease(vm, 0x6);
+                break;
+              case SDLK_r:
+                chip8::handleKeyRelease(vm, 0x7);
+                break;
+              case SDLK_a:
+                chip8::handleKeyRelease(vm, 0x8);
+                break;
+              case SDLK_s:
+                chip8::handleKeyRelease(vm, 0x9);
+                break;
+              case SDLK_d:
+                chip8::handleKeyRelease(vm, 0xA);
+                break;
+              case SDLK_f:
+                chip8::handleKeyRelease(vm, 0xB);
+                break;
+              case SDLK_z:
+                chip8::handleKeyRelease(vm, 0xC);
+                break;
+              case SDLK_x:
+                chip8::handleKeyRelease(vm, 0xD);
+                break;
+              case SDLK_c:
+                chip8::handleKeyRelease(vm, 0xE);
+                break;
+              case SDLK_v:
+                chip8::handleKeyRelease(vm, 0xF);
+                break;
+              default:
+                break;
+            }
           }
         }
 
@@ -58,6 +164,7 @@ namespace host {
         SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);
 
         chip8::cycle(vm);
+        // std::cout << "cycle" << std::endl;
 
         // Draw VM's graphics memory to screen.
         const auto & graphics = vm.graphics;
@@ -82,6 +189,7 @@ namespace host {
 
         // Flip buffers.
         SDL_RenderPresent(renderer.get());
+        SDL_Delay( 3);
       }
     }
 
