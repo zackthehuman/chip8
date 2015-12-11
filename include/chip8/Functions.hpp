@@ -68,4 +68,5 @@ namespace chip8 {
   void printGraphicsBufferToConsole(VirtualMachine & vm);
 
   void loadRomData(VirtualMachine & vm, const std::vector<char> & file);
+  void loadFontData(VirtualMachine & vm, const std::vector<Byte> & data);
 }

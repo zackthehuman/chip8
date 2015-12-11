@@ -22,14 +22,9 @@ int main(int argc, char** argv) {
     return static_cast<Byte>(dist(mt));
   };
 
-  loadRomData(vm, host::readFileAsChar("breakout.chip8"));
+  loadFontData(vm, chip8::FONT_DATA);
+  loadRomData(vm, host::readFileAsChar("brix.chip8"));
   reset(vm);
-
-  for(auto i = 0; i < 10000; i++) {
-    cycle(vm);
-  }
-
-  printGraphicsBufferToConsole(vm);
 
   return app.run();
 }

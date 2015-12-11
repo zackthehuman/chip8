@@ -166,4 +166,15 @@ namespace chip8 {
       }
     );
   }
+
+  void loadFontData(VirtualMachine & vm, const std::vector<Byte> & data) {
+    std::transform(
+      std::begin(data),
+      std::end(data),
+      std::begin(vm.memory), // Load the font dats at the beginning of memory.
+      [](const char c) {
+        return static_cast<Byte>(c);
+      }
+    );
+  }
 }

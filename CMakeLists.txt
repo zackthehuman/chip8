@@ -63,6 +63,13 @@ include_directories( ${INCLUDE_DIRS} )
 
 add_executable( ${project_name} ${HOST_APPLICATION_SOURCE_FILES} ${EMULATOR_SOURCE_FILES} ${INCLUDE_DIRS} )
 
+find_package(SDL2)
+
+if(SDL2_FOUND)
+  include_directories( ${SDL2_INCLUDE_DIR} )
+  target_link_libraries( ${project_name} ${SDL2_LIBRARY} )
+endif(SDL2_FOUND)
+
 #
 # Copy content files to output directory
 #

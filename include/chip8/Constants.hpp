@@ -1,6 +1,6 @@
 #pragma once
-#include <array>
 #include <cstdint>
+#include <vector>
 #include "chip8/Types.hpp"
 
 namespace chip8 {
@@ -11,7 +11,7 @@ namespace chip8 {
   const Instruction LOW_BYTE_MASK = 0x00FF;
   const Address ADDRESS_BYTE_MASK = 0x0FFF;
   const Address PROGRAM_START_ADDRESS = 512;
-  const std::array<Byte, 80> FONT_DATA { {
+  const std::vector<Byte> FONT_DATA { {
     0b11110000,
     0b10010000,
     0b10010000,
