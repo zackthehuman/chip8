@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
   loadRomData(vm, host::readFileAsChar("breakout.chip8"));
   reset(vm);
 
-  for(auto i = 0; i < 1000; i++) {
+  for(auto i = 0; i < 10000; i++) {
     cycle(vm);
   }
 
