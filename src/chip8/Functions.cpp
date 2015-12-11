@@ -31,9 +31,12 @@ namespace chip8 {
   } };
 
   Instruction fetch(VirtualMachine & vm) {
-    Instruction highByte = static_cast<Instruction>(vm.memory[vm.programCounter++]) << 8;
-    Instruction lowByte = static_cast<Instruction>(vm.memory[vm.programCounter++]);
-    return highByte + lowByte;
+    Instruction highByte = static_cast<Instruction>(vm.memory[vm.programCounter]) << 8;
+    Instruction lowByte = static_cast<Instruction>(vm.memory[vm.programCounter + 1]);
+
+    vm.programCounter += 2;
+
+    return highByte | lowByte;
   }
 
   void execute(VirtualMachine & vm, Instruction instruction) {
@@ -114,6 +117,8 @@ namespace chip8 {
 
   void cycle(VirtualMachine & vm) {
     if(!vm.awaitingKeypress) {
+      execute(vm, fetch(vm));
+
       if(vm.timers.delay > 0) {
         vm.timers.delay -= 1;
       }
@@ -121,8 +126,6 @@ namespace chip8 {
       if(vm.timers.sound > 0) {
         vm.timers.sound -= 1;
       }
-
-      execute(vm, fetch(vm));
     }
   }
 

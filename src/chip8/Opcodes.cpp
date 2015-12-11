@@ -497,7 +497,7 @@ namespace chip8 {
       std::tie(x, std::ignore) = getXY(instruction);
 
       const auto character = vm.registers[x];
-      const auto memoryOffset = character * 8; // Each character occupies 8 bytes.
+      const auto memoryOffset = character * 5; // Each character occupies 5 bytes.
 
       vm.I = memoryOffset;
     }
