@@ -42,83 +42,13 @@ namespace chip8 {
   void execute(VirtualMachine & vm, Instruction instruction) {
     // no-op
     const Instruction OP_MASK = 0xF000;
+    const auto handlerOffset = (instruction & OP_MASK) >> 12;
 
-    // FUNCTION_TABLE[instruction & OP_MASK](vm, instruction);
-
-    switch(instruction & OP_MASK) {
-      case 0x0000:
-        ops::disambiguate0x0(vm, instruction);
-        break;
-
-      case 0x1000:
-        ops::jump(vm, instruction);
-        break;
-
-      case 0x2000:
-        ops::callSubroutine(vm, instruction);
-        break;
-
-      case 0x3000:
-        ops::skipIfEquals(vm, instruction);
-        break;
-
-      case 0x4000:
-        ops::skipIfNotEquals(vm, instruction);
-        break;
-
-      case 0x5000:
-        ops::skipIfVxEqualsVy(vm, instruction);
-        break;
-
-      case 0x6000:
-        ops::setVx(vm, instruction);
-        break;
-
-      case 0x7000:
-        ops::addToVx(vm, instruction);
-        break;
-
-      case 0x8000:
-        ops::disambiguate0x8(vm, instruction);
-        break;
-
-      case 0x9000:
-        ops::skipIfVxNotEqualsVy(vm, instruction);
-        break;
-
-      case 0xA000:
-        ops::setIToAddress(vm, instruction);
-        break;
-
-      case 0xB000:
-        ops::jumpPlusV0(vm, instruction);
-        break;
-
-      case 0xC000:
-        ops::randomVxModNn(vm, instruction);
-        break;
-
-      case 0xD000:
-        ops::blit(vm, instruction);
-        break;
-
-      case 0xE000:
-        ops::disambiguate0xE(vm, instruction);
-        break;
-
-      case 0xF000:
-        ops::disambiguate0xF(vm, instruction);
-        break;
-
-      default:
-      break;
-    }
+    FUNCTION_TABLE[handlerOffset](vm, instruction);
   }
 
   void cycle(VirtualMachine & vm) {
     if(!vm.awaitingKeypress) {
-      execute(vm, fetch(vm));
-
       if(vm.timers.delay > 0) {
         vm.timers.delay -= 1;
       }
@@ -126,6 +56,8 @@ namespace chip8 {
       if(vm.timers.sound > 0) {
         vm.timers.sound -= 1;
       }
+
+      execute(vm, fetch(vm));
     }
   }
 
