@@ -4,6 +4,7 @@
 #include "chip8/VirtualMachine.hpp"
 #include "chip8/Functions.hpp"
 #include "host/FileUtilities.hpp"
+#include "host/Application.hpp"
 #include <iostream>
 #include <random>
 
@@ -11,6 +12,7 @@ int main(int argc, char** argv) {
   using namespace chip8;
 
   VirtualMachine vm;
+  host::Application app{vm};
 
   std::random_device rd;
   std::mt19937 mt{rd()};
@@ -29,5 +31,5 @@ int main(int argc, char** argv) {
 
   printGraphicsBufferToConsole(vm);
 
-  return 0;
+  return app.run();
 }
