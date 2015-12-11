@@ -50,13 +50,17 @@ set( EMULATOR_SOURCE_FILES
   src/chip8/Opcodes.cpp
 )
 
+set( HOST_APPLICATION_SOURCE_FILES
+  src/host/FileUtilities.cpp
+)
+
 set( INCLUDE_DIRS
   ${PROJECT_SOURCE_DIR}/include
 )
 
 include_directories( ${INCLUDE_DIRS} )
 
-add_executable( ${project_name} ${EMULATOR_SOURCE_FILES} ${INCLUDE_DIRS} )
+add_executable( ${project_name} ${HOST_APPLICATION_SOURCE_FILES} ${EMULATOR_SOURCE_FILES} ${INCLUDE_DIRS} )
 
 #
 # Copy content files to output directory

@@ -9,4 +9,5 @@ namespace chip8 {
   const std::size_t HIGH_BYTE_SHIFT = 8;
   const Instruction LOW_BYTE_MASK = 0x00FF;
   const Address ADDRESS_BYTE_MASK = 0x0FFF;
+  const Address PROGRAM_START_ADDRESS = 512;
 }

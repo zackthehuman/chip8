@@ -1,11 +1,13 @@
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include "chip8/Opcodes.hpp"
+#include <algorithm>
 #include <array>
 #include <bitset>
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 
 namespace chip8 {
 
@@ -124,6 +126,11 @@ namespace chip8 {
     }
   }
 
+  void reset(VirtualMachine & vm) {
+    // Programs begin at memory location 512.
+    vm.programCounter = PROGRAM_START_ADDRESS;
+  }
+
   void handleKeypress(VirtualMachine & vm, Byte key) {
     if(vm.awaitingKeypress) {
       vm.awaitingKeypress = false;
@@ -147,5 +154,16 @@ namespace chip8 {
     }
 
     std::cout << "\n" << std::endl;
+  }
+
+  void loadRomData(VirtualMachine & vm, const std::vector<char> & data) {
+    std::transform(
+      std::begin(data),
+      std::end(data),
+      std::begin(vm.memory) + PROGRAM_START_ADDRESS,
+      [](const char c) {
+        return static_cast<Byte>(c);
+      }
+    );
   }
 }

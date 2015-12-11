@@ -4,6 +4,7 @@
 #include <climits>
 #include <tuple>
 #include <type_traits>
+#include <vector>
 
 namespace chip8 {
   struct VirtualMachine;
@@ -11,6 +12,7 @@ namespace chip8 {
   Instruction fetch(VirtualMachine & vm);
   void execute(VirtualMachine & vm, Instruction instruction);
   void cycle(VirtualMachine & vm);
+  void reset(VirtualMachine & vm);
 
   inline bool matchesMask(const Instruction ins, const Instruction mask) {
     return (ins & mask) == mask;
@@ -64,4 +66,6 @@ namespace chip8 {
   void handleKeyRelease(VirtualMachine & vm, Byte key);
 
   void printGraphicsBufferToConsole(VirtualMachine & vm);
+
+  void loadRomData(VirtualMachine & vm, const std::vector<char> & file);
 }

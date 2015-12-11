@@ -162,6 +162,14 @@ TEST_CASE( "Basic VM functions", "fetch return value and side effects" ) {
     REQUIRE( vm.programCounter == pc );
   }
 
+  SECTION( "reset should set the program counter to location 512" ) {
+    vm.programCounter = 0;
+
+    chip8::reset(vm);
+
+    REQUIRE( vm.programCounter == 512 );
+  }
+
   SECTION( "handleKeypress should set the keyboard bit for the corresponding key" ) {
     chip8::handleKeypress(vm, 0x0);
     REQUIRE( vm.keyboard[0x0] == 1 );
