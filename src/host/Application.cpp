@@ -2,6 +2,7 @@
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include <iostream>
+#include <chrono>
 
 namespace host {
 
@@ -55,15 +56,33 @@ namespace host {
         SDL_RenderClear(renderer.get());
       }
 
+      // 60hz
+      using frame_period = std::chrono::duration<long long, std::ratio<1, 60>>;
+      auto prev = std::chrono::high_resolution_clock::now();
+      auto current = prev;
+      
+
       while(!quit) {
         handleEvents();
 
+        current = std::chrono::high_resolution_clock::now();
+        auto difference = current - prev;
+
         if(!paused) {
+          if (difference > frame_period{1}) {
+            prev = current;
+            if(vm.timers.delay > 0) {
+              vm.timers.delay -= 1;
+            }
+
+            if(vm.timers.sound > 0) {
+              vm.timers.sound -= 1;
+            }
+          }
+
           updateEmulator();
           updateScreen();
         }
-
-        SDL_Delay(1);
       }
     }
 
@@ -203,7 +222,7 @@ namespace host {
 
   void Application::updateScreen() {
     // Clear screen with black.
-    if(renderer && vm.graphicsAreDirty) {
+    if(renderer) {
       SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
       SDL_RenderClear(renderer.get());
       SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);
