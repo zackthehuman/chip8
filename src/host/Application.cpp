@@ -57,10 +57,9 @@ namespace host {
       }
 
       // 60hz
-      using frame_period = std::chrono::duration<long long, std::ratio<1, 60>>;
+      using FramePeriod = std::chrono::duration<long long, std::ratio<1, 60>>;
       auto prev = std::chrono::high_resolution_clock::now();
       auto current = prev;
-      
 
       while(!quit) {
         handleEvents();
@@ -69,8 +68,9 @@ namespace host {
         auto difference = current - prev;
 
         if(!paused) {
-          if (difference > frame_period{1}) {
+          if(difference > FramePeriod{1}) {
             prev = current;
+
             if(vm.timers.delay > 0) {
               vm.timers.delay -= 1;
             }
@@ -97,11 +97,9 @@ namespace host {
         switch(event.window.event) {
           case SDL_WINDOWEVENT_FOCUS_GAINED:
             paused = false;
-            std::cout << "Focus gained. Resuming." << std::endl;
             break;
           case SDL_WINDOWEVENT_FOCUS_LOST:
             paused = true;
-            std::cout << "Focus lost. Pausing." << std::endl;
             break;
           default:
             break;
@@ -221,12 +219,11 @@ namespace host {
   }
 
   void Application::updateScreen() {
-    // Clear screen with black.
-    if(renderer) {
+    if(renderer && vm.graphicsAreDirty) {
+      // Clear screen with black.
       SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
       SDL_RenderClear(renderer.get());
       SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);
-
 
       // Draw VM's graphics memory to screen.
       const auto & graphics = vm.graphics;
@@ -248,10 +245,12 @@ namespace host {
           pixelMask >>= 1;
         }
       }
-    }
 
-    // Flip buffers.
-    SDL_RenderPresent(renderer.get());
+      // Flip buffers.
+      SDL_RenderPresent(renderer.get());
+
+      vm.graphicsAreDirty = false;
+    }
   }
 
 }

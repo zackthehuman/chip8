@@ -13,6 +13,7 @@ namespace chip8 {
     Stack stack;
     RandomNumberGenerator rng;
     GraphicsBuffer graphics;
+    bool graphicsAreDirty;
     KeyboardInputs keyboard;
     bool awaitingKeypress;
     Byte nextKeypressRegister;
@@ -26,6 +27,7 @@ namespace chip8 {
       , stack{}
       , rng{[](Byte seed) { return 7; }}
       , graphics{}
+      , graphicsAreDirty{false}
       , keyboard{}
       , awaitingKeypress{false}
       , nextKeypressRegister{0}
