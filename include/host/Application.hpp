@@ -17,12 +17,21 @@ namespace host {
   private:
     chip8::VirtualMachine & vm;
     SDL2WindowPtr window;
+    SDL2RendererPtr renderer;
+    SDL_Event event;
+    SDL_Rect pixelRect;
+    bool quit;
+    bool paused;
 
   public:
     Application(chip8::VirtualMachine & vm);
     ~Application();
 
     int run();
+
+    void handleEvents();
+    void updateEmulator();
+    void updateScreen();
   };
 
 }
