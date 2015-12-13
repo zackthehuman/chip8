@@ -53,6 +53,7 @@ set( HOST_APPLICATION_SOURCE_FILES
   src/host/Main.cpp
   src/host/Application.cpp
   src/host/FileUtilities.cpp
+  src/host/ToneGenerator.cpp
 )
 
 set( INCLUDE_DIRS

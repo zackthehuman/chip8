@@ -1,4 +1,5 @@
 #include "host/Application.hpp"
+#include "host/ToneGenerator.hpp"
 #include "chip8/Functions.hpp"
 #include "chip8/VirtualMachine.hpp"
 #include <iostream>
@@ -15,7 +16,7 @@ namespace host {
     , quit{false}
     , paused{false}
   {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+    if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0){
       std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
     }
 
@@ -39,6 +40,7 @@ namespace host {
   }
 
   int Application::run() {
+    ToneGenerator toneGenerator;
 
     chip8::reset(vm);
 
@@ -78,6 +80,12 @@ namespace host {
             if(vm.timers.sound > 0) {
               vm.timers.sound -= 1;
             }
+          }
+
+          if(vm.timers.sound > 0) {
+            toneGenerator.activate();
+          } else {
+            toneGenerator.deactivate();
           }
 
           updateEmulator();
