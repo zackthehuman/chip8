@@ -55,14 +55,28 @@ namespace host {
         SDL_RenderClear(renderer.get());
       }
 
+      int32_t count = 0;
+
       while(!quit) {
         handleEvents();
 
         if(!paused) {
+          // update timers at 60hz
+          if (count % 17 == 0) {
+            if(vm.timers.delay > 0) {
+              vm.timers.delay -= 1;
+            }
+
+            if(vm.timers.sound > 0) {
+              vm.timers.sound -= 1;
+            }
+          }
+
           updateEmulator();
           updateScreen();
         }
 
+        count++;
         SDL_Delay(1);
       }
     }
@@ -203,7 +217,7 @@ namespace host {
 
   void Application::updateScreen() {
     // Clear screen with black.
-    if(renderer && vm.graphicsAreDirty) {
+    if(renderer) {
       SDL_SetRenderDrawColor(renderer.get(), 0, 0, 0, SDL_ALPHA_OPAQUE);
       SDL_RenderClear(renderer.get());
       SDL_SetRenderDrawColor(renderer.get(), 255, 255, 255, SDL_ALPHA_OPAQUE);

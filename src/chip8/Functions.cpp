@@ -49,14 +49,6 @@ namespace chip8 {
 
   void cycle(VirtualMachine & vm) {
     if(!vm.awaitingKeypress) {
-      if(vm.timers.delay > 0) {
-        vm.timers.delay -= 1;
-      }
-
-      if(vm.timers.sound > 0) {
-        vm.timers.sound -= 1;
-      }
-
       execute(vm, fetch(vm));
     }
   }

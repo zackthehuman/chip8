@@ -24,7 +24,6 @@ namespace chip8 {
 
     void clearScreen(VirtualMachine & vm, Instruction instruction) {
       vm.graphics.fill(0);
-      vm.graphicsAreDirty = true;
     }
 
     void returnFromSubroutine(VirtualMachine & vm, Instruction instruction) {
@@ -359,8 +358,6 @@ namespace chip8 {
           vm.registers[0xF] = 0;
         }
       }
-
-      vm.graphicsAreDirty = true;
     }
 
     void disambiguate0xE(VirtualMachine & vm, Instruction instruction) {
