@@ -15,6 +15,7 @@ namespace host {
     , pixelRect{}
     , quit{false}
     , paused{false}
+    , enableSound{false}
   {
     if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0){
       std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
@@ -58,20 +59,28 @@ namespace host {
         SDL_RenderClear(renderer.get());
       }
 
-      // 60hz
+      // timers @ 60Hz
       using FramePeriod = std::chrono::duration<long long, std::ratio<1, 60>>;
-      auto prev = std::chrono::high_resolution_clock::now();
-      auto current = prev;
+      auto prevFrame = std::chrono::high_resolution_clock::now();
+      auto currentFrame = prevFrame;
+
+      // CPU cycles @ 500Hz
+      using CyclePeriod = std::chrono::duration<long long, std::ratio<1, 500>>;
+      auto prevCycle = std::chrono::high_resolution_clock::now();
+      auto currentCycle = prevCycle;
 
       while(!quit) {
         handleEvents();
 
-        current = std::chrono::high_resolution_clock::now();
-        auto difference = current - prev;
+        currentFrame = std::chrono::high_resolution_clock::now();
+        auto frameDifference = currentFrame - prevFrame;
+
+        currentCycle = std::chrono::high_resolution_clock::now();
+        auto cycleDifference = currentCycle - prevCycle;
 
         if(!paused) {
-          if(difference > FramePeriod{1}) {
-            prev = current;
+          if(frameDifference > FramePeriod{1}) {
+            prevFrame = currentFrame;
 
             if(vm.timers.delay > 0) {
               vm.timers.delay -= 1;
@@ -82,13 +91,19 @@ namespace host {
             }
           }
 
-          if(vm.timers.sound > 0) {
-            toneGenerator.activate();
-          } else {
-            toneGenerator.deactivate();
+          if(enableSound) {
+            if(vm.timers.sound > 0) {
+              toneGenerator.activate();
+            } else {
+              toneGenerator.deactivate();
+            }
           }
 
-          updateEmulator();
+          if(cycleDifference > CyclePeriod{1}) {
+            prevCycle = currentCycle;
+            updateEmulator();
+          }
+
           updateScreen();
         }
       }

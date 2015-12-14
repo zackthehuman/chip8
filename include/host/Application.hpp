@@ -22,6 +22,7 @@ namespace host {
     SDL_Rect pixelRect;
     bool quit;
     bool paused;
+    bool enableSound;
 
   public:
     Application(chip8::VirtualMachine & vm);
