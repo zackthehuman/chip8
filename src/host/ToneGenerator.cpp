@@ -1,4 +1,5 @@
 #include "host/ToneGenerator.hpp"
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <iostream>
 
@@ -7,11 +8,9 @@ namespace host {
     static double angle = 0.0;
 
     for(int i = 0; i < length; i++) {
-      // 40 is the volume
-      *stream++ = (int8_t)(40 * std::sin(angle));
-      // 2 pi is complete cycle
-      // / 100 is the frequency
-      angle += 2 * M_PI / 100;
+      int8_t sample = std::sin(angle) >= 0 ? 1 : -1;
+      *stream++ = 5 * sample;
+      angle += 2 * M_PI / 800;
     }
   }
 
