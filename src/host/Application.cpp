@@ -15,7 +15,7 @@ namespace host {
     , pixelRect{}
     , quit{false}
     , paused{false}
-    , enableSound{false}
+    , enableSound{true}
   {
     if(SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) < 0){
       std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;

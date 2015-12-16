@@ -7,12 +7,11 @@ namespace host {
     static double angle = 0.0;
 
     for(int i = 0; i < length; i++) {
-      *stream++ = 255 * std::cos(angle);
-      angle += 3.14159 / 100;
-
-      if(angle > 2.0 * 3.14159) {
-        angle -= 2.0 * 3.14159;
-      }
+      // 40 is the volume
+      *stream++ = (int8_t)(40 * std::sin(angle));
+      // 2 pi is complete cycle
+      // / 100 is the frequency
+      angle += 2 * M_PI / 100;
     }
   }
 
@@ -24,7 +23,7 @@ namespace host {
   {
     SDL_zero(desired);
     desired.freq = 48000;
-    desired.format = AUDIO_F32;
+    desired.format = AUDIO_S8; // samples are int8_t
     desired.channels = 2;
     desired.samples = 4096;
     desired.callback = ToneGenerator::generateTone;
@@ -34,7 +33,6 @@ namespace host {
     if(device == 0) {
       std::cout << "Unable to open audio device. SDL_Error: " << SDL_GetError() << std::endl;
     } else {
-
     }
   }
 
